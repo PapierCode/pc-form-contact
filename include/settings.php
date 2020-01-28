@@ -9,17 +9,21 @@
 =            Formulaire            =
 ==================================*/
 
-global $form_contact_settings; 
-$form_contact_settings = array(
+/*----------  Textes  ----------*/
+
+global $form_contact_texts;
+$form_contact_texts = array(
 	'title'				=> 'Formulaire de contact',
-	'css'				=> 'form form--contact',
 	'label-required'	=> '&nbsp;<abbr title="Champ obligatoire" class="form-required">*</abbr>',
 	'label-recaptcha'	=> 'Protection contre les spams',
+	'submit-txt'		=> 'Envoyer',
 	'submit-title'		=> 'Envoyer un e-mail',
-	'submit-txt'		=> 'Envoyer'
+	'msg-field-error'	=> 'Le formulaire contient des erreurs.',
+	'msg-mail-sent'		=> 'Le message est envoyé.',
+	'msg-mail-fail'		=> 'Une erreur est survenue, merci de valider à nouveau le formulaire.',
 );
 
-$form_contact_settings = apply_filters( 'pc_filter_form_contact_settings', $form_contact_settings );
+$form_contact_texts = apply_filters( 'pc_filter_form_contact_texts', $form_contact_texts );
 
  
 /*=====  FIN Formulaire  =====*/
@@ -41,7 +45,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     		=> 'Nom',
 				'attr'				=> 'readonly',
             	'css'       		=> 'width:100%',
-				'email-from-txt'	=> true // pour la notification mail
+				'email-from-name'	=> true // pour la notification mail
 			),
 			array(
 				'type'      		=> 'text',
@@ -80,7 +84,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     		=> 'CGU acceptées',
 				'attr'				=> 'disabled',
 				'required' 	    	=> true,
-				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="'.get_the_permalink($settings_form_contact['cgu-page']).'" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
+				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="'.$settings_form_contact['cgu-page'].'" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
 				'form-desc'			=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
 				'email-not-in'		=> true // pour la notification mail
 
@@ -98,19 +102,29 @@ if ( class_exists('PC_Add_metabox') ) {
 	
 /*=====  FIN Définition des champs  =====*/
 
-/*=================================================================
-=            Préparation des champs pour le formulaire            =
-=================================================================*/
+/*================================================
+=            Paramètres du formulaire            =
+================================================*/
 
-global $form_contact_fields;
-$form_contact_fields = array();
+global $form_contact_datas;
+$form_contact_datas = array(
+	'css' => 'form form--contact',
+	'errors' => array(
+		'global-error' 		=> false, // erreur globale
+		'spam-error'		=> false, // erreur recaptcha
+		'mail-sent' 		=> false, // validation envoi email
+		'mail-sent-error'	=> false, // erreur envoi email
+	),
+	'fields' => array()
+);
 
+// création des  champs d'après ceux du post
 foreach ( $post_contact_fields['fields'] as $field ) {
-
-	$form_contact_fields[$post_contact_fields['prefix'].'-'.$field['id']] = $field;
-
+	$form_contact_datas['fields'][$post_contact_fields['prefix'].'-'.$field['id']] = $field;
 }
 
+// filtre
+$form_contact_datas = apply_filters( 'pc_filter_form_contact_settings', $form_contact_datas );
 
 
-/*=====  FIN Préparation des champs pour le formulaire  =====*/
+/*=====  FIN Paramètres du formulaire  =====*/

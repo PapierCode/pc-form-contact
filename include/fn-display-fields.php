@@ -3,12 +3,17 @@
  * 
  * Fonctions d'affichage des champs
  * 
+ ** Afficher un label
+ ** Afficher un champ text, number, email ou textarea
+ ** Afficher un champ checkbox
+ * 
  */
 
+/*=========================================
+=            Afficher un label            =
+=========================================*/
 
 /**
- * 
- * Afficher un label
  * 
  * @param string    $for        attribut for
  * @param string    $txt        texte du label
@@ -17,17 +22,23 @@
 
 function pc_form_display_label( $for, $datas ) {
 
+    global $form_contact_texts;
+
     $txt = ( isset($datas['form-label']) ) ? $datas['form-label'] : $datas['label'];
-    if ( isset($datas['required']) && $datas['required'] == true ) { $txt .= '&nbsp;<abbr title="Champ obligatoire" class="form-required">*</abbr>'; }
+    if ( isset($datas['required']) && $datas['required'] == true ) { $txt .= $form_contact_texts['label-required']; }
 
     echo '<label for="'.$for.'">'.$txt.'</label>';
 
 }
 
 
+/*=====  FIN Afficher un label  =====*/
+
+/*=========================================================================
+=            Afficher un champ text, number, email ou textarea            =
+=========================================================================*/
+
 /**
- * 
- * Afficher un champ text, number, email ou textarea
  * 
  * @param string    $name               attribut name et id
  * @param array     $datas
@@ -116,9 +127,13 @@ function pc_form_display_field_input_textarea( $name, $datas, $mail_sent = false
 }
 
 
+/*=====  FIN Afficher un champ text, number, email ou textarea  =====*/
+
+/*==================================================
+=            Afficher un champ checkbox            =
+==================================================*/
+
 /**
- * 
- * Afficher un champ checkbox
  * 
  * @param string    $name               attribut name et id
  * @param array     $datas
@@ -182,3 +197,6 @@ function pc_form_display_field_checkbox( $name, $datas, $mail_sent = false ) {
 	echo '</li>';
 
 }
+
+
+/*=====  FIN Afficher un champ checkbox  =====*/

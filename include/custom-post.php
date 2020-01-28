@@ -54,18 +54,14 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 	$post_contact_declaration = new PC_Add_Custom_Post( CONTACT_POST_SLUG, $post_contact_labels, $post_contact_args );
 
 
-	/*----------  Champs  ----------*/
-	
-	include 'form-contact_settings.php';
-
-
 	/*=====  FIN Création  ======*/
 
 	/*==============================================
 	=            Affichage dans l'admin            =
 	==============================================*/
 
-	// pas d'actions groupées
+	/*----------  Actions groupées  ----------*/	
+	
 	add_filter( 'bulk_actions-edit-'.CONTACT_POST_SLUG, 'pc_post_contact_bluk_actions' );
 
 		function pc_post_contact_bluk_actions( $actions ) {
@@ -75,7 +71,9 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 
 		}
 
-	// liens "Tous", "Publiés",...
+
+	/*----------  Liens "Tous", "Publiés",...  ----------*/
+	
 	add_filter( 'views_edit-'.CONTACT_POST_SLUG, 'pc_post_contact_view_links' );
 	
 		function pc_post_contact_view_links( $views ) {
@@ -85,20 +83,21 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 
 		}
 	
-	// colonnes
+
+	/*----------  Colonnes  ----------*/
+	
 	add_filter( 'manage_'.CONTACT_POST_SLUG.'_posts_columns', 'pc_post_contact_columns' );
 
 		function pc_post_contact_columns( $columns ) {
 			
-			$columns['title'] = 'Référence';
+			$columns['title'] = 'E-mail';
 			unset($columns['date']);
 			$columns['send'] = 'Envoyé le';
-			$columns['mail'] = 'E-mail';
+			$columns['last-name'] = 'Nom';
 			return $columns;
 
 		}
 
-	// contenu des colonnes
 	add_action( 'manage_'.CONTACT_POST_SLUG.'_posts_custom_column', 'pc_post_contact_columns_content', 10, 2);
 
 		function pc_post_contact_columns_content( $column, $post_id ) {
@@ -108,14 +107,16 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 					echo get_the_date('d F Y',$post_id);
 					break;
 				
-				case 'mail':
-					echo get_post_meta( $post_id, 'contact-mail' ,true );
+				case 'last-name':
+					echo get_post_meta( $post_id, 'contact-last-name', true );
 					break;
 			}
 
 		}
 
-	// liens sous le titre
+
+	/*----------  Liens sous le titre  ----------*/
+	
 	add_filter( 'post_row_actions', 'remove_row_actions', 10, 2 );
 		function remove_row_actions( $actions, $post )
 		{
@@ -127,12 +128,63 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 			return $actions;
 		}
 
-	// pas de metaboxe Publier
+
+	/*----------  Pas de métaboxe Publier  ----------*/
+	
 	add_action( 'admin_menu' , 'pc_post_contact_remove_metabox' );
 
 		function pc_post_contact_remove_metabox() {
 			remove_meta_box( 'submitdiv' , CONTACT_POST_SLUG , 'normal' );
 		}
+	
+
+	/*----------  Pas de titre dans le détail du post  ----------*/
+	
+	add_filter( 'admin_body_class', 'pc_post_contact_body_classes', 10, 1 );
+
+		function pc_post_contact_body_classes( $classes ) {
+
+			global $pagenow;
+			$screen = get_current_screen();
+			if ( $pagenow =='post.php' && $screen->post_type == CONTACT_POST_SLUG ) {
+				$classes .= ' pc-post-contact';
+				
+			}
+			return $classes;
+
+		}
+	
+	add_action( 'admin_head', 'pc_post_contact_head_style' );
+		
+		function pc_post_contact_head_style() { 
+		
+			echo '<style>.pc-post-contact #post-body-content { display:none }</style>';
+		
+		}
+
+
+	/*----------  Métaboxe date & suppression ----------*/
+	
+	add_action( 'admin_init', function() {
+
+		add_meta_box(
+			'post-contact-infos',
+			'Date et suppression',
+			'pc_post_contact_box',
+			array( CONTACT_POST_SLUG ),
+			'side',
+			'high'
+		);
+	
+	} );
+
+	function pc_post_contact_box( $post ) {
+
+		echo '<p>Envoyé le <strong>'.get_the_date('d F Y',$post->ID).'</strong>.</p>';
+		echo '<p><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
+
+	}
+	
 	
 
 /*=====  FIN Affichage dans l'admin  =====*/

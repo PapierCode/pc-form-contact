@@ -17,19 +17,13 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
     // création du post
     define('CONTACT_POST_SLUG', 'contact');
-    include 'include/custom-post.php';
+    include 'include/post.php';
+    include 'include/post-admin.php';
 
     // page de configuration (admin)
-    include 'include/admin.php';
+    include 'include/settings-admin.php';
     global $settings_form_contact;
     $settings_form_contact = get_option('form-contact-settings-option');
-
-    // fonctions utiles
-    include 'include/fn-display-fields.php';
-    include 'include/fn-validation.php';
-
-    // datas global du formulaire, des champs du post & du formulaire
-    include 'include/settings.php';
     
     
     /*=====  FIN Includes  =====*/
@@ -44,7 +38,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
             $page_content_from['contactform'] = array(
                 'Formulaire de contact',
-                dirname( __FILE__ ).'/include/template.php'
+                dirname( __FILE__ ).'\include\template.php'
             );
 
             return $page_content_from;
@@ -59,7 +53,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
     ================================================*/
         
     // avant le chargement de la template    
-    add_action( 'template_redirect', 'pc_form_contact_validation' );
+    add_action( 'template_redirect', 'pc_form_contact_validation',999 );
 
         function pc_form_contact_validation() {
             
@@ -72,6 +66,13 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
             /*===================================================
             =            Configuration du formulaire            =
             ===================================================*/
+
+            // fonctions utiles
+            include 'include/fn-display-fields.php';
+            include 'include/fn-validation.php';
+
+            // datas global du formulaire, des champs du post & du formulaire
+            include 'include/settings.php';
             
             // $settings_pc : configuration projet, cf. plugin [PC] Custom WP
             // $form_contact_datas : paramètres formulaire, cf. settings.php

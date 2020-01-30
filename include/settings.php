@@ -34,7 +34,7 @@ $form_contact_texts = apply_filters( 'pc_filter_form_contact_texts', $form_conta
 
 if ( class_exists('PC_Add_metabox') ) {
 
-	global $settings_form_contact;
+	global $settings_project;
 	
 	$post_contact_fields = array(
 		'prefix'        => 'contact',
@@ -84,7 +84,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     		=> 'CGU acceptées',
 				'attr'				=> 'disabled',
 				'required' 	    	=> true,
-				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="'.$settings_form_contact['cgu-page'].'" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
+				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="'.get_the_permalink($settings_project['cgu-page']).'" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
 				'form-desc'			=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
 				'email-not-in'		=> true // pour la notification mail
 
@@ -118,7 +118,7 @@ $form_contact_datas = array(
 	'fields' => array()
 );
 
-// création des  champs d'après ceux du post
+// création des champs d'après ceux du post
 foreach ( $post_contact_fields['fields'] as $field ) {
 	$form_contact_datas['fields'][$post_contact_fields['prefix'].'-'.$field['id']] = $field;
 }

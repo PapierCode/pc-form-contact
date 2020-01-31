@@ -24,6 +24,13 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
     include 'include/settings-admin.php';
     global $settings_form_contact;
     $settings_form_contact = get_option('form-contact-settings-option');
+
+	// fonctions utiles
+	include 'include/fn-display-fields.php';
+	include 'include/fn-validation.php';
+
+	// datas global du formulaire, des champs du post & du formulaire
+	include 'include/settings.php';
     
     
     /*=====  FIN Includes  =====*/
@@ -66,13 +73,6 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
             /*===================================================
             =            Configuration du formulaire            =
             ===================================================*/
-
-            // fonctions utiles
-            include 'include/fn-display-fields.php';
-            include 'include/fn-validation.php';
-
-            // datas global du formulaire, des champs du post & du formulaire
-            include 'include/settings.php';
             
             // $settings_pc : configuration projet, cf. plugin [PC] Custom WP
             // $form_contact_datas : paramètres formulaire, cf. settings.php
@@ -132,7 +132,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                         $form_contact_datas['errors']['mail-sent-error'] = true;
 
                     }
-                
+                    
 
                 } // FIN if !form_contact_global_error                    
 
@@ -140,7 +140,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
 
         } // FIN pc_form_contact_validation()
-    
+
     /*=====  FIN Traitement du formulaire  =====*/
 
 }); // FIN plugins_loaded

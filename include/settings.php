@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 
  * Formulaire de contact : configuration 
@@ -20,7 +21,7 @@ $form_contact_texts = array(
 	'submit-title'		=> 'Envoyer un e-mail',
 	'msg-field-error'	=> 'Le formulaire contient des erreurs.',
 	'msg-mail-sent'		=> 'Le message est envoyé.',
-	'msg-mail-fail'		=> 'Une erreur est survenue, merci de valider à nouveau le formulaire.',
+	'msg-mail-fail'		=> 'Une erreur est survenue, merci de valider à nouveau le formulaire.'
 );
 
 $form_contact_texts = apply_filters( 'pc_filter_form_contact_texts', $form_contact_texts );
@@ -33,9 +34,8 @@ $form_contact_texts = apply_filters( 'pc_filter_form_contact_texts', $form_conta
 =============================================*/
 
 if ( class_exists('PC_Add_metabox') ) {
-
-	global $settings_project;
 	
+	// champs
 	$post_contact_fields = array(
 		'prefix'        => 'contact',
 		'fields'        => array(
@@ -84,7 +84,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     		=> 'CGU acceptées',
 				'attr'				=> 'disabled',
 				'required' 	    	=> true,
-				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="'.get_the_permalink($settings_project['cgu-page']).'" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
+				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="{{cgu}}" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
 				'form-desc'			=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
 				'email-not-in'		=> true // pour la notification mail
 
@@ -92,8 +92,9 @@ if ( class_exists('PC_Add_metabox') ) {
 		)
 	);
 
+	// filtre
 	$post_contact_fields = apply_filters( 'pc_filter_post_contact_fields', $post_contact_fields );
-	
+	// déclaration
 	$post_contact_fields_declaration = new PC_Add_Metabox( CONTACT_POST_SLUG, 'Champs', 'message-fields', $post_contact_fields, 'normal', 'low' );
 	
 	
@@ -118,11 +119,10 @@ $form_contact_datas = array(
 	'fields' => array()
 );
 
-// création des champs d'après ceux du post
+// propriétés des champs d'après ceux du post
 foreach ( $post_contact_fields['fields'] as $field ) {
 	$form_contact_datas['fields'][$post_contact_fields['prefix'].'-'.$field['id']] = $field;
 }
-
 // filtre
 $form_contact_datas = apply_filters( 'pc_filter_form_contact_settings', $form_contact_datas );
 

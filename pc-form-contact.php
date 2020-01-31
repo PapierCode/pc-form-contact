@@ -17,10 +17,11 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
     // création du post
     define('CONTACT_POST_SLUG', 'contact');
-    include 'include/post.php';
-    include 'include/post-admin.php';
-
-    // page de configuration (admin)
+	include 'include/post.php';
+	// administration des posts
+	include 'include/post-admin.php';
+	
+    // page de paramètres administrables
     include 'include/settings-admin.php';
     global $settings_form_contact;
     $settings_form_contact = get_option('form-contact-settings-option');
@@ -29,7 +30,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 	include 'include/fn-display-fields.php';
 	include 'include/fn-validation.php';
 
-	// datas global du formulaire, des champs du post & du formulaire
+	// configuration des champs du post et du formulaire
 	include 'include/settings.php';
     
     
@@ -60,7 +61,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
     ================================================*/
         
     // avant le chargement de la template    
-    add_action( 'template_redirect', 'pc_form_contact_validation',999 );
+    add_action( 'template_redirect', 'pc_form_contact_validation', 999 );
 
         function pc_form_contact_validation() {
             
@@ -76,11 +77,11 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
             
             // $settings_pc : configuration projet, cf. plugin [PC] Custom WP
             // $form_contact_datas : paramètres formulaire, cf. settings.php
-            global $settings_pc, $form_contact_datas;
+            global $settings_pc, $settings_project, $form_contact_datas;
             
             // création du captcha
             global $form_contact_captcha; // pour utilisation dans la template
-            $form_contact_captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
+			$form_contact_captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
             
 
             /*=====  FIN Configuration du formulaire  =====*/
@@ -97,8 +98,8 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                 $form_contact_datas = pc_form_contact_required_fields( $form_contact_datas );
                 // si erreur captcha
                 if ( $form_contact_captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) === false ) {
-                    $form_contact_datas['errors']['spam-error'] 	= true;
-                    $form_contact_datas['errors']['global-error']	= true;
+                    $form_contact_datas['errors']['spam-error'] = true;
+                    $form_contact_datas['errors']['global-error'] = true;
                 }
                 
 
@@ -120,7 +121,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                         pc_form_contact_save_post( $form_contact_datas['fields'] );
                         // validation
                         $form_contact_datas['errors']['mail-sent'] = true;
-                        // affichage dans lla meta title
+                        // affichage dans la meta title
                         add_filter( 'pc_filter_meta_title', function() {
                             global $form_contact_texts;
                             return $form_contact_texts['msg-mail-sent'];
@@ -130,6 +131,11 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
                         // problème lors de l'envoi de l'email
                         $form_contact_datas['errors']['mail-sent-error'] = true;
+                        // affichage dans la meta title
+                        add_filter( 'pc_filter_meta_title', function() {
+                            global $form_contact_texts;
+                            return $form_contact_texts['msg-mail-fail'];
+                        } );
 
                     }
                     

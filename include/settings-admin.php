@@ -2,7 +2,7 @@
 
 /**
  * 
- * Page de paramètres dans l'administration
+ * Page de paramètres administrables
  * 
  */
 

@@ -3,16 +3,16 @@
  * 
  * Traitement du formulaire de contact
  * 
- ** Champs obligatoires
+ ** Validation des champs obligatoires
  ** Notification par email
  ** Préparation des valeurs
  ** Enregistrement du post
  * 
  */
 
-/*===========================================
-=            Champs obligatoires            =
-===========================================*/
+/*==========================================================
+=            Validation des champs obligatoires            =
+==========================================================*/
 
 /**
  * 
@@ -26,6 +26,7 @@ function pc_form_contact_required_fields( $form_datas ) {
                         
 		if ( isset( $field['required'] ) && $field['required'] == true ) {
 	
+			// par défaut
 			$form_datas['fields'][$id]['form-error'] = false;
 	
 			switch ($field['type']) {
@@ -62,7 +63,7 @@ function pc_form_contact_required_fields( $form_datas ) {
 }
 
 
-/*=====  FIN Champs obligatoires  =====*/
+/*=====  FIN Validation des champs obligatoires  =====*/
 
 /*===============================================
 =            Préparation des valeurs            =
@@ -122,7 +123,6 @@ function pc_form_contact_sanitize( $fields )  {
  */
 
 function pc_form_contact_notification( $fields )  {
-
 
 	global $settings_form_contact;
 
@@ -184,7 +184,7 @@ function pc_form_contact_notification( $fields )  {
 	apply_filters( 'pc_filter_form_contact_notification', $email_notification );
 
 
-	/*----------  Envoi ?  ----------*/
+	/*----------  Envoi  ----------*/
 
 	$email_sent = wp_mail(
 		$email_notification['to'],
@@ -212,23 +212,24 @@ function pc_form_contact_notification( $fields )  {
 
 function pc_form_contact_save_post( $fields ) {
 
-	$post_contact_metas_to_save = array();
+	// métas associées au post
+	$metas_to_save = array();
 	foreach ($fields as $id => $datas) {
 		if ( isset( $datas['form-value'] ) ) {
-			$post_contact_metas_to_save[$id] = $datas['form-value'];
+			$metas_to_save[$id] = $datas['form-value'];
 		}
 		if ( $datas['type'] == 'email' ) {
-			$title = $datas['form-value'];
+			$post_title = $datas['form-value'];
 		}
 	}
 
-	$post_contact_save = wp_insert_post(
+	$post_to_save = wp_insert_post(
 		array(
 			'post_author'	=> 1,
-			'post_title'	=> $title,
+			'post_title'	=> $post_title,
 			'post_status'	=> 'publish',
 			'post_type'		=> CONTACT_POST_SLUG,
-			'meta_input'	=> $post_contact_metas_to_save
+			'meta_input'	=> $metas_to_save
 		)
 	);
 

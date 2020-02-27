@@ -46,7 +46,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
 
             $page_content_from['contactform'] = array(
                 'Formulaire de contact',
-                dirname( __FILE__ ).'\include\template.php'
+                dirname( __FILE__ ).'/include/template.php'
             );
 
             return $page_content_from;

@@ -8,7 +8,7 @@
 
 ?>
 
-<h2 id="form-contact"><?= $form_contact_texts['title']; ?></h2>
+<div id="form-contact" class="<?= $form_contact_datas['css']; ?>">
 
 <?php // erreur ou validation de l'envoi
 if( $form_contact_datas['errors']['global-error'] ) { echo '<p class="msg msg--error msg--block">'.$form_contact_texts['msg-field-error'].'</p>'; }
@@ -16,9 +16,9 @@ if( $form_contact_datas['errors']['mail-sent'] ) { echo '<p class="msg msg--succ
 if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg--error msg--block">'.$form_contact_texts['msg-mail-fail'].'</p>'; }
 ?>
 
-<form class="<?= $form_contact_datas['css']; ?>" method="POST" action="#form-contact">
+<form method="POST" action="#form-contact">
 
-	<ul class="form-list reset-ul">
+	<ul class="form-list reset-list">
 
 	<?php // affichage des champs
 
@@ -47,9 +47,11 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg
 		</li>
 		
 		<li class="form-item form-item--submit">
-			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
+			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit btn btn--xl btn--red"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
 		</li>
 
 	</ul>
 
 </form>
+
+</div>

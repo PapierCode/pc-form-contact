@@ -32,7 +32,7 @@ function pc_form_display_label( $for, $datas ) {
 		$txt = str_replace( '{{cgu}}', get_the_permalink($settings_project['cgu-page']), $txt );
 	}
 	
-    echo '<label for="'.$for.'">'.$txt.'</label>';
+    echo '<label class="form-label" for="'.$for.'"><span>'.$txt.'</span></label>';
 
 }
 
@@ -97,7 +97,7 @@ function pc_form_display_field_input_textarea( $name, $datas, $mail_sent = false
     $other .= ( $datas['required'] ) ? ' required' : '';
     
     // accessibilité
-    $other .= ( $datas['form-desc'] != '' ) ? ' aria-describedby="desc-'.$name.'"' : '';
+    $other .= ( $datas['form-desc'] != '' ) ? ' aria-describedby="form-item-desc-'.$name.'"' : '';
     $other .= ( $datas['form-error'] ) ? ' aria-invalid="true"' : '';
 
 
@@ -108,7 +108,7 @@ function pc_form_display_field_input_textarea( $name, $datas, $mail_sent = false
         // label
         pc_form_display_label( $name, $datas );
         
-        echo '<div>';
+        echo '<div class="form-item-inner">';
 
             // input type text/number/email
             if ( $type == 'text' || $type == 'number' || $type == 'email' ) {
@@ -123,7 +123,7 @@ function pc_form_display_field_input_textarea( $name, $datas, $mail_sent = false
             }
 
             // description/aide
-            if ( $datas['form-desc'] != '' ) { echo '<p id="desc-'.$name.'">'.$datas['form-desc'].'</p>'; }
+            if ( $datas['form-desc'] != '' ) { echo '<p id="form-item-desc-'.$name.'" class="form-item-desc">'.$datas['form-desc'].'</p>'; }
 
         echo '</div>';
 
@@ -187,18 +187,18 @@ function pc_form_display_field_checkbox( $name, $datas, $mail_sent = false ) {
     $other .= ( !$mail_sent && isset($_POST[$name]) ) ? ' checked' : '';
 
     // accessibilité
-    $other .= ( $datas['form-desc'] != '' ) ? ' aria-describedby="desc-'.$name.'"' : '';
+    $other .= ( $datas['form-desc'] != '' ) ? ' aria-describedby="form-item-desc-'.$name.'"' : '';
     $other .= ( $datas['form-error'] ) ? ' aria-invalid="true"' : '';
 
 
     /*----------  Affichage  ----------*/
 
     echo '<li class="'.$css.'">';
-        echo '<div>';
-            echo '<input type="checkbox" name="'.$name.'" id="'.$name.'" value="1"'.$other.' />';
+        echo '<div class="form-item-inner">';
+            echo '<input class="visually-hidden" type="checkbox" name="'.$name.'" id="'.$name.'" value="1"'.$other.' />';
             pc_form_display_label( $name, $datas );
         echo '</div>';
-        if ( $datas['form-desc'] != '' ) { echo '<p id="desc-'.$name.'">'.$datas['form-desc'].'</p>'; };
+        if ( $datas['form-desc'] != '' ) { echo '<p id="form-item-desc-'.$name.'" class="form-item-desc">'.$datas['form-desc'].'</p>'; };
 	echo '</li>';
 
 }

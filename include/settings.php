@@ -14,8 +14,7 @@
 
 global $form_contact_texts;
 $form_contact_texts = array(
-	'title'				=> 'Formulaire de contact',
-	'label-required'	=> '&nbsp;<abbr title="Champ obligatoire" class="form-required">*</abbr>',
+	'label-required'	=> ' <span class="form-label-required">(obligatoire)</span>',
 	'label-recaptcha'	=> 'Protection contre les spams',
 	'submit-txt'		=> 'Envoyer',
 	'submit-title'		=> 'Envoyer un e-mail',
@@ -84,7 +83,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     		=> 'CGU acceptées',
 				'attr'				=> 'disabled',
 				'required' 	    	=> true,
-				'form-label'		=> 'J\'ai lu et j\'accepte la <a href="{{cgu}}" title="Politique de confidentialité">Politique de confidentialité</a>', // pour le formulaire public
+				'form-label'		=> 'J\'ai lu et j\'accepte les <a href="{{cgu}}">conditions générales d\'utilisation</a>', // pour le formulaire public
 				'form-desc'			=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
 				'email-not-in'		=> true // pour la notification mail
 
@@ -109,7 +108,7 @@ if ( class_exists('PC_Add_metabox') ) {
 
 global $form_contact_datas;
 $form_contact_datas = array(
-	'css' => 'form form--contact',
+	'css' => 'form form--contact fs-bloc',
 	'errors' => array(
 		'global-error' 		=> false, // erreur globale
 		'spam-error'		=> false, // erreur recaptcha

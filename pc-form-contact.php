@@ -79,9 +79,11 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
             // $form_contact_datas : paramètres formulaire, cf. settings.php
             global $settings_pc, $settings_project, $form_contact_datas;
             
-            // création du captcha
-            global $form_contact_captcha; // pour utilisation dans la template
-			$form_contact_captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
+			// création du captcha
+			if ( $settings_pc['google-recaptcha-site'] != '' && $settings_pc['google-recaptcha-secret'] != '' ) {
+	            global $form_contact_captcha; // pour utilisation dans la template
+				$form_contact_captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
+			}
             
 
             /*=====  FIN Configuration du formulaire  =====*/
@@ -97,7 +99,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                 // si le navigateur n'a pas gèré l'attribut required
                 $form_contact_datas = pc_form_contact_required_fields( $form_contact_datas );
                 // si erreur captcha
-                if ( $form_contact_captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) === false ) {
+                if ( isset($form_contact_captcha) && $form_contact_captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) === false ) {
                     $form_contact_datas['errors']['spam-error'] = true;
                     $form_contact_datas['errors']['global-error'] = true;
                 }

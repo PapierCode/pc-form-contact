@@ -20,7 +20,7 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg
 
 	<ul class="form-list reset-list">
 
-	<?php // affichage des champs
+		<?php // affichage des champs
 
 		foreach ($form_contact_datas['fields'] as $id => $datas) {
 
@@ -36,15 +36,17 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg
 
 		} // FIN foreach $form_contact_datas['fields']
 
-	?>
-		
-		<li class="form-item form-item--captcha">
-			<span class="form-label label-like <?php if($form_contact_datas['errors']['spam-error']) echo 'msg msg--error'; ?>" aria-hidden="true"><?= $form_contact_texts['label-recaptcha'].$form_contact_texts['label-required']; ?></span>
-			<?php
-				echo $form_contact_captcha->script();
-				echo $form_contact_captcha->html();
-			?>
-		</li>
+		if ( isset($form_contact_captcha) ) { ?>
+			
+			<li class="form-item form-item--captcha">
+				<span class="form-label label-like <?php if($form_contact_datas['errors']['spam-error']) echo 'msg msg--error'; ?>" aria-hidden="true"><?= $form_contact_texts['label-recaptcha'].$form_contact_texts['label-required']; ?></span>
+				<?php
+					echo $form_contact_captcha->script();
+					echo $form_contact_captcha->html();
+				?>
+			</li>
+
+		<?php } ?>
 		
 		<li class="form-item form-item--submit">
 			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit btn btn--xl btn--red"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>

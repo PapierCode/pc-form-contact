@@ -109,6 +109,7 @@ if ( class_exists('PC_Add_metabox') ) {
 global $form_contact_datas;
 $form_contact_datas = array(
 	'css' => 'form form--contact fs-bloc',
+	'recaptacha' => false,
 	'errors' => array(
 		'global-error' 		=> false, // erreur globale
 		'spam-error'		=> false, // erreur recaptcha

@@ -162,7 +162,7 @@ add_action( 'admin_init', function() {
 
 	add_meta_box(
 		'post-contact-infos',
-		'Date et suppression',
+		'Détails et suppression',
 		'pc_post_contact_box',
 		array( CONTACT_POST_SLUG ),
 		'side',
@@ -173,8 +173,11 @@ add_action( 'admin_init', function() {
 
 function pc_post_contact_box( $post ) {
 
-	echo '<p>Envoyé le <strong>'.get_the_date('d F Y',$post->ID).'</strong>.</p>';
-	echo '<p><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
+	$page_from_id = get_post_meta( $post->ID, 'contact-from-page', true );
+	
+	echo '<p><strong>Envoyé le '.get_the_date('d F Y',$post->ID).'</strong>.</p>';
+	echo '<p>Depuis la page : <a href="'.get_the_permalink( $page_from_id ).'" title="Voir la page">'.get_the_title( $page_from_id ).'</a></p>';
+	echo '<p style="padding-top:1em;border-top:1px solid #ccd0d4"><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
 
 }
 

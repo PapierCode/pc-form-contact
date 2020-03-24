@@ -64,11 +64,12 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
     add_action( 'template_redirect', 'pc_form_contact_validation', 999 );
 
         function pc_form_contact_validation() {
-            
+			
+			$post_id = get_the_id();
 
             /*----------  Conditions d'affichage  ----------*/            
 
-            if ( !is_page() || get_post_meta( get_the_id(), 'content-from', true ) != 'contactform' ) { return; }
+            if ( !is_page() || get_post_meta( $post_id, 'content-from', true ) != 'contactform' ) { return; }
 
             
             /*===================================================
@@ -81,8 +82,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
             
 			// création du captcha
 			if ( $settings_pc['google-recaptcha-site'] != '' && $settings_pc['google-recaptcha-secret'] != '' ) {
-	            global $form_contact_captcha; // pour utilisation dans la template
-				$form_contact_captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
+				$form_contact_datas['recaptacha'] = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
 			}
             
 
@@ -99,7 +99,7 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                 // si le navigateur n'a pas gèré l'attribut required
                 $form_contact_datas = pc_form_contact_required_fields( $form_contact_datas );
                 // si erreur captcha
-                if ( isset($form_contact_captcha) && $form_contact_captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) === false ) {
+                if ( $form_contact_datas['recaptacha'] && $form_contact_datas['recaptacha']->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) === false ) {
                     $form_contact_datas['errors']['spam-error'] = true;
                     $form_contact_datas['errors']['global-error'] = true;
                 }
@@ -117,10 +117,10 @@ add_action('plugins_loaded', function() { // en attente du plugin [PC] Tools
                     
                     /*----------  envoi de l'email, enregistrement du post et validation  ----------*/
                     
-                    if ( pc_form_contact_notification( $form_contact_datas['fields'] ) ) { 
+                    if ( pc_form_contact_notification( $form_contact_datas['fields'], $post_id ) ) { 
                     
                         // enregistrement du post
-                        pc_form_contact_save_post( $form_contact_datas['fields'] );
+                        pc_form_contact_save_post( $form_contact_datas['fields'], $post_id );
                         // validation
                         $form_contact_datas['errors']['mail-sent'] = true;
                         // affichage dans la meta title

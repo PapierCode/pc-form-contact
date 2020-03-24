@@ -122,7 +122,7 @@ function pc_form_contact_sanitize( $fields )  {
  * 
  */
 
-function pc_form_contact_notification( $fields )  {
+function pc_form_contact_notification( $fields, $post_id )  {
 
 	global $settings_form_contact;
 
@@ -139,6 +139,9 @@ function pc_form_contact_notification( $fields )  {
 	/*----------  Contenu  ----------*/
 	
 	$email_notification['content'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>';
+
+	// page d'origine
+	$email_notification['content'] .= '<p><em>Formulaire publié sur la page :</em> <a href="'.get_the_permalink( $post_id ).'" title="Voir la page">'.get_the_title( $post_id ).'</a></p>';
                 
 	foreach ($fields as $id => $field) {
 		
@@ -210,7 +213,7 @@ function pc_form_contact_notification( $fields )  {
  * 
  */
 
-function pc_form_contact_save_post( $fields ) {
+function pc_form_contact_save_post( $fields, $post_id ) {
 
 	// métas associées au post
 	$metas_to_save = array();
@@ -222,6 +225,7 @@ function pc_form_contact_save_post( $fields ) {
 			$post_title = $datas['form-value'];
 		}
 	}
+	$metas_to_save['contact-from-page'] = $post_id;
 
 	$post_to_save = wp_insert_post(
 		array(

@@ -6,14 +6,22 @@
 *
 **/
 
+global $form_contact_datas, $form_contact_texts ;
+
 ?>
 
 <div id="form-contact" class="<?= $form_contact_datas['css']; ?>">
 
 <?php // erreur ou validation de l'envoi
-if( $form_contact_datas['errors']['global-error'] ) { echo '<p class="msg msg--error msg--block">'.$form_contact_texts['msg-field-error'].'</p>'; }
-if( $form_contact_datas['errors']['mail-sent'] ) { echo '<p class="msg msg--success msg--block">'.$form_contact_texts['msg-mail-sent'].'</p>'; }
-if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg--error msg--block">'.$form_contact_texts['msg-mail-fail'].'</p>'; }
+if( $form_contact_datas['errors']['global-error'] ) {
+	echo pc_display_alert_msg( $form_contact_texts['msg-field-error'], 'error', 'block' );
+}
+if( $form_contact_datas['errors']['mail-sent'] ) { 
+	echo pc_display_alert_msg( $form_contact_texts['msg-mail-sent'], 'success', 'block' );
+}
+if( $form_contact_datas['errors']['mail-sent-error'] ) {
+	echo pc_display_alert_msg( $form_contact_texts['msg-mail-fail'], 'error', 'block' );
+}
 ?>
 
 <form method="POST" action="#form-contact">
@@ -36,20 +44,20 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) { echo '<p class="msg msg
 
 		} // FIN foreach $form_contact_datas['fields']
 
-		if ( isset($form_contact_captcha) ) { ?>
+		if ( $form_contact_datas['recaptacha'] ) { ?>
 			
 			<li class="form-item form-item--captcha">
 				<span class="form-label label-like <?php if($form_contact_datas['errors']['spam-error']) echo 'msg msg--error'; ?>" aria-hidden="true"><?= $form_contact_texts['label-recaptcha'].$form_contact_texts['label-required']; ?></span>
 				<?php
-					echo $form_contact_captcha->script();
-					echo $form_contact_captcha->html();
+					echo $form_contact_datas['recaptacha']->script();
+					echo $form_contact_datas['recaptacha']->html();
 				?>
 			</li>
 
 		<?php } ?>
 		
 		<li class="form-item form-item--submit">
-			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit btn btn--xl btn--red"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
+			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit btn btn--xl btn--color-1"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
 		</li>
 
 	</ul>

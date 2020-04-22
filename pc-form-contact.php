@@ -13,7 +13,7 @@ Author: Papier Codé
 =            Includes            =
 ================================*/
 
-add_action( 'setup_theme', 'pc_plugin_contact_form_init' );
+add_action( 'after_setup_theme', 'pc_plugin_contact_form_init' );
 
 	function pc_plugin_contact_form_init() {
 

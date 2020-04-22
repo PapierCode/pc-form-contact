@@ -93,6 +93,7 @@ if ( class_exists('PC_Add_metabox') ) {
 
 	// filtre
 	$post_contact_fields = apply_filters( 'pc_filter_post_contact_fields', $post_contact_fields );
+
 	// déclaration
 	$post_contact_fields_declaration = new PC_Add_Metabox( CONTACT_POST_SLUG, 'Champs', 'message-fields', $post_contact_fields, 'normal', 'low' );
 	

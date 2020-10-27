@@ -35,7 +35,7 @@ $form_contact_texts = apply_filters( 'pc_filter_form_contact_texts', $form_conta
 if ( class_exists('PC_Add_metabox') ) {
 	
 	// champs
-	$post_contact_fields = array(
+	$form_contact_post_fields = array(
 		'prefix'        => 'contact',
 		'fields'        => array(
 			array(
@@ -92,10 +92,10 @@ if ( class_exists('PC_Add_metabox') ) {
 	);
 
 	// filtre
-	$post_contact_fields = apply_filters( 'pc_filter_post_contact_fields', $post_contact_fields );
+	$form_contact_post_fields = apply_filters( 'pc_filter_post_contact_fields', $form_contact_post_fields );
 
 	// déclaration
-	$post_contact_fields_declaration = new PC_Add_Metabox( CONTACT_POST_SLUG, 'Champs', 'message-fields', $post_contact_fields, 'normal', 'low' );
+	$form_contact_post_fields_declaration = new PC_Add_Metabox( FORM_CONTACT_POST_SLUG, 'Champs', 'message-fields', $form_contact_post_fields, 'normal', 'low' );
 	
 	
 } // FIN if class_exist()
@@ -109,7 +109,7 @@ if ( class_exists('PC_Add_metabox') ) {
 
 global $form_contact_datas;
 $form_contact_datas = array(
-	'css' => 'form form--contact fs-bloc',
+	'css' => 'form form--contact layout-sub',
 	'recaptacha' => false,
 	'errors' => array(
 		'global-error' 		=> false, // erreur globale
@@ -121,11 +121,11 @@ $form_contact_datas = array(
 );
 
 // propriétés des champs d'après ceux du post
-foreach ( $post_contact_fields['fields'] as $field ) {
-	$form_contact_datas['fields'][$post_contact_fields['prefix'].'-'.$field['id']] = $field;
+foreach ( $form_contact_post_fields['fields'] as $field ) {
+	$form_contact_datas['fields'][$form_contact_post_fields['prefix'].'-'.$field['id']] = $field;
 }
 // filtre
-$form_contact_datas = apply_filters( 'pc_filter_form_contact_settings', $form_contact_datas );
+$form_contact_datas = apply_filters( 'pc_filter_form_contact_datas', $form_contact_datas );
 
 
 /*=====  FIN Paramètres du formulaire  =====*/

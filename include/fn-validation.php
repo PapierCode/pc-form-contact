@@ -232,7 +232,7 @@ function pc_form_contact_save_post( $fields, $post_id ) {
 			'post_author'	=> 1,
 			'post_title'	=> $post_title,
 			'post_status'	=> 'publish',
-			'post_type'		=> CONTACT_POST_SLUG,
+			'post_type'		=> FORM_CONTACT_POST_SLUG,
 			'meta_input'	=> $metas_to_save
 		)
 	);

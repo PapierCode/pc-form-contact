@@ -4,7 +4,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 1.0.1
+Version: 1.0.2
 Author: Papier Codé
 */
 
@@ -13,12 +13,12 @@ Author: Papier Codé
 =            Includes            =
 ================================*/
 
-add_action( 'after_setup_theme', 'pc_plugin_contact_form_init' );
+add_action( 'plugins_loaded', 'pc_plugin_form_contact_init' );
 
-	function pc_plugin_contact_form_init() {
+	function pc_plugin_form_contact_init() {
 
 		// création du post
-		define('CONTACT_POST_SLUG', 'contact');
+		define('FORM_CONTACT_POST_SLUG', 'contact');
 		include 'include/post.php';
 		// administration des posts
 		include 'include/post-admin.php';
@@ -44,13 +44,13 @@ add_action( 'after_setup_theme', 'pc_plugin_contact_form_init' );
 =            Ajout de l'option dans les pages            =
 ========================================================*/
 	
-add_filter( 'pc_filter_page_content_from', 'pc_add_form_contact_to_page', 10, 1 );
+add_filter( 'pc_filter_page_content_from', 'pc_form_contact_edit_content_from', 10, 1 );
 
-	function pc_add_form_contact_to_page( $page_content_from ) {
+	function pc_form_contact_edit_content_from( $page_content_from ) {
 
 		$page_content_from['contactform'] = array(
 			'Formulaire de contact',
-			dirname( __FILE__ ).'/include/template.php'
+			dirname( __FILE__ ).'\include\template.php'
 		);
 
 		return $page_content_from;

@@ -12,7 +12,7 @@ if ( class_exists('PC_Add_Admin_Page') ) {
 
     /*----------  Champs  ----------*/
 
-    $settings_form_contact_fields = array(        
+    $form_contact_settings_fields = array(        
         array(
             'title'     => 'Formulaire de contact',
             'id'        => 'contact-form',
@@ -39,32 +39,32 @@ if ( class_exists('PC_Add_Admin_Page') ) {
         )
     );
     
-    $settings_form_contact_fields = apply_filters( 'pc_filter_settings_form_contact_fields', $settings_form_contact_fields );
+    $form_contact_settings_fields = apply_filters( 'pc_filter_form_contact_settings_fields', $form_contact_settings_fields );
     
     
     /*----------  Déclaration  ----------*/
     
-    $settings_form_contact_declaration = new PC_Add_Admin_Page(
+    $form_contact_settings_declaration = new PC_Add_Admin_Page(
         'Paramètres du formulaire de contact',
-        'edit.php?post_type='.CONTACT_POST_SLUG,
+        'edit.php?post_type='.FORM_CONTACT_POST_SLUG,
         'Paramètres',
         'form-contact-settings',
-        $settings_form_contact_fields,
+        $form_contact_settings_fields,
         'editor',
         '',
         'dashicons-clipboard',
-        'pc_sanitize_settings_form_contact'
+        'pc_form_contact_settings_sanitize'
     );
     
     
     /*----------  Traitement  ----------*/
     
-    function pc_sanitize_settings_form_contact( $datas ) {
+    function pc_form_contact_settings_sanitize( $datas ) {
 
-        $datas = apply_filters( 'pc_filter_settings_form_contact_sanitize_fields', $datas );
+        $datas = apply_filters( 'pc_filter_form_contact_settings_sanitize', $datas );
     
-        global $settings_form_contact_fields;
-        return pc_sanitize_settings_fields( $settings_form_contact_fields, $datas );
+        global $form_contact_settings_fields;
+        return pc_sanitize_settings_fields( $form_contact_settings_fields, $datas );
     
     }
     

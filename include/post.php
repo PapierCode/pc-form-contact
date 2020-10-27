@@ -45,7 +45,7 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 
 	/*----------  Déclaration  ----------*/
 
-	$post_contact_declaration = new PC_Add_Custom_Post( CONTACT_POST_SLUG, $post_contact_labels, $post_contact_args );
+	$post_contact_declaration = new PC_Add_Custom_Post( FORM_CONTACT_POST_SLUG, $post_contact_labels, $post_contact_args );
 
 
 } // FIN if class_exists(PC_Add_Custom_Post)

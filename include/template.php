@@ -34,11 +34,11 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) {
 
 			if ( $datas['type'] == 'text' || $datas['type'] == 'number' || $datas['type'] == 'email' || $datas['type'] == 'textarea' ) {
 
-				pc_form_display_field_input_textarea( $id, $datas, $form_contact_datas['errors']['mail-sent'] );
+				pc_form_contact_display_field_input_textarea( $id, $datas, $form_contact_datas['errors']['mail-sent'] );
 
 			} else if ( $datas['type'] == 'checkbox' ) {
 
-				pc_form_display_field_checkbox( $id, $datas, $form_contact_datas['errors']['mail-sent'] );
+				pc_form_contact_display_field_checkbox( $id, $datas, $form_contact_datas['errors']['mail-sent'] );
 
 			} // FIN if $datas['type']	
 

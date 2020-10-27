@@ -3,24 +3,23 @@
  * 
  * Administration des posts Messages (formulaire de contact)
  * 
+ ** Recherche dans les métas
  ** Liste de posts
  ** Détail du post
  * 
  */
 
-/*=====================================
-=            Liste de post            =
-=====================================*/
+/*================================================
+=            Recherche dans les métas            =
+================================================*/
 
-/*----------  Recherche dans les métas  ----------*/
+add_filter( 'posts_join', 'pc_form_contact_admin_edit_search_join' );
 
-add_filter( 'posts_join', 'pc_post_contact_admin_search_join' );
-
-	function pc_post_contact_admin_search_join( $join ){
+	function pc_form_contact_admin_edit_search_join( $join ){
 
 		global $pagenow, $wpdb;
 
-		if ( is_admin() && $pagenow == 'edit.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] == CONTACT_POST_SLUG && ! empty( $_GET['s'] ) ) {
+		if ( is_admin() && $pagenow == 'edit.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] == FORM_CONTACT_POST_SLUG && ! empty( $_GET['s'] ) ) {
 			$join .= 'LEFT JOIN ' . $wpdb->postmeta . ' ON ' . $wpdb->posts . '.ID = ' . $wpdb->postmeta . '.post_id ';
 		}
 
@@ -28,13 +27,13 @@ add_filter( 'posts_join', 'pc_post_contact_admin_search_join' );
 
 	}
 
-add_filter( 'posts_where', 'pc_post_contact_admin_search_where' );
+add_filter( 'posts_where', 'pc_form_contact_admin_edit_search_where' );
 
-	function pc_post_contact_admin_search_where( $where ){
+	function pc_form_contact_admin_edit_search_where( $where ){
 
 		global $pagenow, $wpdb;
 
-		if ( is_admin() && $pagenow == 'edit.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] == CONTACT_POST_SLUG && ! empty( $_GET['s'] ) ) {
+		if ( is_admin() && $pagenow == 'edit.php' && ! empty( $_GET['post_type'] ) && $_GET['post_type'] == FORM_CONTACT_POST_SLUG && ! empty( $_GET['s'] ) ) {
 
 			$where = preg_replace( "/\(\s*" . $wpdb->posts . ".post_title\s+LIKE\s*(\'[^\']+\')\s*\)/", "(" . $wpdb->posts . ".post_title LIKE $1) OR (" . $wpdb->postmeta . ".meta_value LIKE $1)", $where );
 
@@ -44,11 +43,17 @@ add_filter( 'posts_where', 'pc_post_contact_admin_search_where' );
 	}
 
 
+/*=====  FIN Recherche  =====*/
+
+/*=====================================
+=            Liste de post            =
+=====================================*/
+
 /*----------  Actions groupées  ----------*/	
 
-add_filter( 'bulk_actions-edit-'.CONTACT_POST_SLUG, 'pc_post_contact_bluk_actions' );
+add_filter( 'bulk_actions-edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_edit_bluk_actions' );
 
-	function pc_post_contact_bluk_actions( $actions ) {
+	function pc_form_contact_admin_edit_bluk_actions( $actions ) {
 
 		unset($actions['edit']);
 		return $actions;
@@ -58,9 +63,9 @@ add_filter( 'bulk_actions-edit-'.CONTACT_POST_SLUG, 'pc_post_contact_bluk_action
 
 /*----------  Liens "Tous", "Publiés",...  ----------*/
 
-add_filter( 'views_edit-'.CONTACT_POST_SLUG, 'pc_post_contact_view_links' );
+add_filter( 'views_edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_edit_view_links' );
 
-	function pc_post_contact_view_links( $views ) {
+	function pc_form_contact_admin_edit_view_links( $views ) {
 
 		unset($views['publish']);
 		return $views;
@@ -70,9 +75,9 @@ add_filter( 'views_edit-'.CONTACT_POST_SLUG, 'pc_post_contact_view_links' );
 
 /*----------  Colonnes  ----------*/
 
-add_filter( 'manage_'.CONTACT_POST_SLUG.'_posts_columns', 'pc_post_contact_columns' );
+add_filter( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_columns', 'pc_form_contact_admin_edit_columns' );
 
-	function pc_post_contact_columns( $columns ) {
+	function pc_form_contact_admin_edit_columns( $columns ) {
 		
 		$columns['title'] = 'E-mail';
 		unset($columns['date']);
@@ -82,9 +87,9 @@ add_filter( 'manage_'.CONTACT_POST_SLUG.'_posts_columns', 'pc_post_contact_colum
 
 	}
 
-add_action( 'manage_'.CONTACT_POST_SLUG.'_posts_custom_column', 'pc_post_contact_columns_content', 10, 2);
+add_action( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_custom_column', 'pc_form_contact_admin_populate_columns', 10, 2);
 
-	function pc_post_contact_columns_content( $column, $post_id ) {
+	function pc_form_contact_admin_populate_columns( $column, $post_id ) {
 
 		switch ($column) {
 			case 'send':
@@ -101,11 +106,11 @@ add_action( 'manage_'.CONTACT_POST_SLUG.'_posts_custom_column', 'pc_post_contact
 
 /*----------  Liens sous le titre  ----------*/
 
-add_filter( 'post_row_actions', 'pc_post_contact_row_actions', 10, 2 );
+add_filter( 'post_row_actions', 'pc_form_contact_edit_row_actions', 10, 2 );
 
-	function pc_post_contact_row_actions( $actions, $post ) {
+	function pc_form_contact_edit_row_actions( $actions, $post ) {
 
-		if ( $post->post_type == CONTACT_POST_SLUG ) {
+		if ( $post->post_type == FORM_CONTACT_POST_SLUG ) {
 			unset($actions['edit']);
 			$actions['display'] = '<a href="'.get_edit_post_link($post->ID).'">Afficher</a>';
 			ksort($actions);
@@ -124,22 +129,22 @@ add_filter( 'post_row_actions', 'pc_post_contact_row_actions', 10, 2 );
 
 /*----------  Pas de métaboxe Publier  ----------*/
 
-add_action( 'admin_menu' , 'pc_post_contact_remove_metabox' );
+add_action( 'admin_menu' , 'pc_form_contact_admin_edit_metaboxes' );
 
-	function pc_post_contact_remove_metabox() {
-		remove_meta_box( 'submitdiv' , CONTACT_POST_SLUG , 'normal' );
+	function pc_form_contact_admin_edit_metaboxes() {
+		remove_meta_box( 'submitdiv' , FORM_CONTACT_POST_SLUG , 'normal' );
 	}
 
 
 /*----------  Pas de titre dans le détail du post  ----------*/
 
-add_filter( 'admin_body_class', 'pc_post_contact_body_classes', 10, 1 );
+add_filter( 'admin_body_class', 'pc_form_contact_admin_edit_body_class', 10, 1 );
 
-	function pc_post_contact_body_classes( $classes ) {
+	function pc_form_contact_admin_edit_body_class( $classes ) {
 
 		global $pagenow;
 		$screen = get_current_screen();
-		if ( $pagenow =='post.php' && $screen->post_type == CONTACT_POST_SLUG ) {
+		if ( $pagenow =='post.php' && $screen->post_type == FORM_CONTACT_POST_SLUG ) {
 			$classes .= ' pc-post-contact';
 			
 		}
@@ -147,9 +152,9 @@ add_filter( 'admin_body_class', 'pc_post_contact_body_classes', 10, 1 );
 
 	}
 
-add_action( 'admin_head', 'pc_post_contact_head_style' );
+add_action( 'admin_head', 'pc_form_contact_admin_add_css_inline' );
 	
-	function pc_post_contact_head_style() { 
+	function pc_form_contact_admin_add_css_inline() { 
 	
 		echo '<style>.pc-post-contact #post-body-content { display:none }</style>';
 	
@@ -163,15 +168,15 @@ add_action( 'admin_init', function() {
 	add_meta_box(
 		'post-contact-infos',
 		'Détails et suppression',
-		'pc_post_contact_box',
-		array( CONTACT_POST_SLUG ),
+		'pc_form_contact_admin_metabox_actions',
+		array( FORM_CONTACT_POST_SLUG ),
 		'side',
 		'high'
 	);
 
 } );
 
-function pc_post_contact_box( $post ) {
+function pc_form_contact_admin_metabox_actions( $post ) {
 
 	$page_from_id = get_post_meta( $post->ID, 'contact-from-page', true );
 	

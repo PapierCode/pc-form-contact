@@ -109,7 +109,7 @@ if ( class_exists('PC_Add_metabox') ) {
 
 global $form_contact_datas;
 $form_contact_datas = array(
-	'css' => 'form form--contact layout-sub',
+	'css' => 'form form--contact',
 	'recaptacha' => false,
 	'errors' => array(
 		'global-error' 		=> false, // erreur globale

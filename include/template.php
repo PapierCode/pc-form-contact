@@ -57,7 +57,7 @@ if( $form_contact_datas['errors']['mail-sent-error'] ) {
 		<?php } ?>
 		
 		<li class="form-item form-item--submit">
-			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="reset-btn form-submit btn btn--xl btn--color-1"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
+			<button type="submit" title="<?= $form_contact_texts['submit-title']; ?>" class="form-submit button button--xl button--color-1"><span class="form-submit-inner"><?= $form_contact_texts['submit-txt']; ?></span></button>
 		</li>
 
 	</ul>

@@ -4,7 +4,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 1.0.6
+Version: 1.0.7
 Author: Papier Codé
 */
 
@@ -69,7 +69,7 @@ add_action( 'template_redirect', 'pc_form_contact_validation', 999 );
 
 	function pc_form_contact_validation() {
 		
-		$post_id = get_the_id();
+		$post_id = get_the_ID();
 
 		/*----------  Conditions d'affichage  ----------*/            
 

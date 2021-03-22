@@ -120,6 +120,17 @@ add_filter( 'post_row_actions', 'pc_form_contact_edit_row_actions', 10, 2 );
 	}
 
 
+/*----------  Accès aux détails pour les éditeurs  ----------*/
+ 
+add_action( 'admin_init', 'pc_form_contact_admin_menu_capabilities', 999 );
+
+	function pc_form_contact_admin_menu_capabilities() {
+		
+		$role = get_role( 'editor' );
+		$role->add_cap( 'edit_others_messages' );
+
+	};
+
 
 /*=====  FIN Liste de post  =====*/
 
@@ -182,7 +193,9 @@ function pc_form_contact_admin_metabox_actions( $post ) {
 	
 	echo '<p><strong>Envoyé le '.get_the_date('d F Y',$post->ID).'</strong>.</p>';
 	echo '<p>Depuis la page : <a href="'.get_the_permalink( $page_from_id ).'" title="Voir la page">'.get_the_title( $page_from_id ).'</a></p>';
-	echo '<p style="padding-top:1em;border-top:1px solid #ccd0d4"><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
+	if ( current_user_can( 'delete_others_posts' ) ) {
+		echo '<p style="padding-top:1em;border-top:1px solid #ccd0d4"><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
+	}
 
 }
 

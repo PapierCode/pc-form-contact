@@ -4,7 +4,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 1.0.8
+Version: 1.0.9
 Author: Papier Codé
 */
 
@@ -128,20 +128,24 @@ add_action( 'template_redirect', 'pc_form_contact_validation', 999 );
 					// validation
 					$form_contact_datas['errors']['mail-sent'] = true;
 					// affichage dans la meta title
-					add_filter( 'pc_filter_meta_title', function() {
-						global $form_contact_texts;
-						return $form_contact_texts['msg-mail-sent'];
-					} );
+					add_filter( 'pc_filter_seo_metas', 'pc_form_seo_metas_mail_sent' );
+						function pc_form_seo_metas_mail_sent( $seo_metas ) {
+							global $form_contact_texts;
+							$seo_metas['title'] = $form_contact_texts['msg-mail-sent'];
+							return $seo_metas;
+						}
 					
 				} else {
 
 					// problème lors de l'envoi de l'email
 					$form_contact_datas['errors']['mail-sent-error'] = true;
 					// affichage dans la meta title
-					add_filter( 'pc_filter_meta_title', function() {
-						global $form_contact_texts;
-						return $form_contact_texts['msg-mail-fail'];
-					} );
+					add_filter( 'pc_filter_seo_metas', 'pc_form_seo_metas_mail_error' );
+						function pc_form_seo_metas_mail_error( $seo_metas ) {
+							global $form_contact_texts;
+							$seo_metas['title'] = $form_contact_texts['msg-mail-fail'];
+							return $seo_metas;
+						};
 
 				}
 				

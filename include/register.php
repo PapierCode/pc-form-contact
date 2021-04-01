@@ -2,7 +2,7 @@
 
 /**
  * 
- * Création du post Messages
+ * [PC] Form Contact : création du post
  * 
  */
 
@@ -36,7 +36,7 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
         'has_archive'		    => false,
         'exclude_from_search'   => true,
 		'publicly_queryable'    => false,
-		'capabilities' => array(
+		'capabilities'			=> array(
 			'create_posts' => false,
 			'edit_others_posts' => 'edit_others_messages'
 		),
@@ -46,7 +46,7 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 
 	/*----------  Déclaration  ----------*/
 
-	$post_contact_declaration = new PC_Add_Custom_Post( FORM_CONTACT_POST_SLUG, $post_contact_labels, $post_contact_args );
+	$register_post_contact = new PC_Add_Custom_Post( FORM_CONTACT_POST_SLUG, $post_contact_labels, $post_contact_args );
 
 
 } // FIN if class_exists(PC_Add_Custom_Post)

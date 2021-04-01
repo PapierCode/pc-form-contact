@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Fonctions d'affichage des champs
+ * [PC] Form Contact : fonctions d'affichage des champs
  * 
  ** Afficher un label
  ** Afficher un champ text, number, email ou textarea
@@ -20,7 +20,7 @@
  * 
  */
 
-function pc_form_contact_display_label( $for, $datas ) {
+function pc_display_form_contact_label( $for, $datas ) {
 
     global $form_contact_texts, $settings_project;
 
@@ -59,7 +59,7 @@ function pc_form_contact_display_label( $for, $datas ) {
  * 
  */
 
-function pc_form_contact_display_field_input_textarea( $name, $datas, $mail_sent = false ) {
+function pc_display_form_contact_field_input_textarea( $name, $datas, $mail_sent = false ) {
 
     /*----------  Configuration  ----------*/ 
     
@@ -106,7 +106,7 @@ function pc_form_contact_display_field_input_textarea( $name, $datas, $mail_sent
     echo '<li class="'.$css.'">';
 
         // label
-        pc_form_contact_display_label( $name, $datas );
+        pc_display_form_contact_label( $name, $datas );
         
         echo '<div class="form-item-inner">';
 
@@ -153,7 +153,7 @@ function pc_form_contact_display_field_input_textarea( $name, $datas, $mail_sent
  * 
  */
 
-function pc_form_contact_display_field_checkbox( $name, $datas, $mail_sent = false ) {
+function pc_display_form_contact_field_checkbox( $name, $datas, $mail_sent = false ) {
 
     /*----------  Configuration  ----------*/ 
     
@@ -196,7 +196,7 @@ function pc_form_contact_display_field_checkbox( $name, $datas, $mail_sent = fal
     echo '<li class="'.$css.'">';
         echo '<div class="form-item-inner">';
             echo '<input class="visually-hidden" type="checkbox" name="'.$name.'" id="'.$name.'" value="1"'.$other.' />';
-            pc_form_contact_display_label( $name, $datas );
+            pc_display_form_contact_label( $name, $datas );
         echo '</div>';
         if ( $datas['form-desc'] != '' ) { echo '<p id="form-item-desc-'.$name.'" class="form-item-desc">'.$datas['form-desc'].'</p>'; };
 	echo '</li>';

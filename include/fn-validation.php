@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Traitement du formulaire de contact
+ * [PC] Form Contact : fonctions de traitement du formulaire
  * 
  ** Validation des champs obligatoires
  ** Notification par email
@@ -16,7 +16,7 @@
 
 /**
  * 
- * @param array		$form_datas		paramètres du formulaire, cf. $form_contact_datas dans settings.php
+ * @param array		$form_datas		paramètres du formulaire, cf. $form_contact_args dans settings.php
  * 
  */
 
@@ -71,7 +71,7 @@ function pc_form_contact_required_fields( $form_datas ) {
 
 /**
  * 
- * @param array		$fields		définition des champs, cf. $form_contact_datas['fields'] dans settings.php
+ * @param array		$fields		définition des champs, cf. $form_contact_args['fields'] dans settings.php
  * 
  */
 
@@ -118,7 +118,7 @@ function pc_form_contact_sanitize( $fields )  {
 
 /**
  * 
- * @param array		$fields		définition des champs, cf. $form_contact_datas['fields'] dans settings.php
+ * @param array		$fields		définition des champs, cf. $form_contact_args['fields'] dans settings.php
  * 
  */
 
@@ -209,7 +209,7 @@ function pc_form_contact_notification( $fields, $post_id )  {
 
 /**
  * 
- * @param array		$fields		définition des champs, cf. $form_contact_datas['fields'] dans settings.php
+ * @param array		$fields		définition des champs, cf. $form_contact_args['fields'] dans settings.php
  * 
  */
 

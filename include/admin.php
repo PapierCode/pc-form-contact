@@ -1,21 +1,21 @@
 <?php
 /**
  * 
- * Administration des posts Messages (formulaire de contact)
+ * [PC] Form Contact : administration
  * 
- ** Recherche dans les métas
+ ** Recherche
  ** Liste de posts
  ** Détail du post
  * 
  */
 
-/*================================================
-=            Recherche dans les métas            =
-================================================*/
+/*=================================
+=            Recherche            =
+=================================*/
 
-add_filter( 'posts_join', 'pc_form_contact_admin_edit_search_join' );
+add_filter( 'posts_join', 'pc_form_contact_edit_admin_search_join' );
 
-	function pc_form_contact_admin_edit_search_join( $join ){
+	function pc_form_contact_edit_admin_search_join( $join ){
 
 		global $pagenow, $wpdb;
 
@@ -27,9 +27,9 @@ add_filter( 'posts_join', 'pc_form_contact_admin_edit_search_join' );
 
 	}
 
-add_filter( 'posts_where', 'pc_form_contact_admin_edit_search_where' );
+add_filter( 'posts_where', 'pc_form_contact_edit_admin_search_where' );
 
-	function pc_form_contact_admin_edit_search_where( $where ){
+	function pc_form_contact_edit_admin_search_where( $where ){
 
 		global $pagenow, $wpdb;
 
@@ -51,9 +51,9 @@ add_filter( 'posts_where', 'pc_form_contact_admin_edit_search_where' );
 
 /*----------  Actions groupées  ----------*/	
 
-add_filter( 'bulk_actions-edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_edit_bluk_actions' );
+add_filter( 'bulk_actions-edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_edit_bluk_actions' );
 
-	function pc_form_contact_admin_edit_bluk_actions( $actions ) {
+	function pc_form_contact_edit_bluk_actions( $actions ) {
 
 		unset($actions['edit']);
 		return $actions;
@@ -63,9 +63,9 @@ add_filter( 'bulk_actions-edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_
 
 /*----------  Liens "Tous", "Publiés",...  ----------*/
 
-add_filter( 'views_edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_edit_view_links' );
+add_filter( 'views_edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_edit_view_links' );
 
-	function pc_form_contact_admin_edit_view_links( $views ) {
+	function pc_form_contact_edit_view_links( $views ) {
 
 		unset($views['publish']);
 		return $views;
@@ -75,9 +75,9 @@ add_filter( 'views_edit-'.FORM_CONTACT_POST_SLUG, 'pc_form_contact_admin_edit_vi
 
 /*----------  Colonnes  ----------*/
 
-add_filter( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_columns', 'pc_form_contact_admin_edit_columns' );
+add_filter( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_columns', 'pc_form_contact_edit_manage_posts_columns' );
 
-	function pc_form_contact_admin_edit_columns( $columns ) {
+	function pc_form_contact_edit_manage_posts_columns( $columns ) {
 		
 		$columns['title'] = 'E-mail';
 		unset($columns['date']);
@@ -87,9 +87,9 @@ add_filter( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_columns', 'pc_form_contact_
 
 	}
 
-add_action( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_custom_column', 'pc_form_contact_admin_populate_columns', 10, 2);
+add_action( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_custom_column', 'pc_form_contact_edit_manage_posts_custom_columns', 10, 2);
 
-	function pc_form_contact_admin_populate_columns( $column, $post_id ) {
+	function pc_form_contact_edit_manage_posts_custom_columns( $column, $post_id ) {
 
 		switch ($column) {
 			case 'send':
@@ -104,11 +104,11 @@ add_action( 'manage_'.FORM_CONTACT_POST_SLUG.'_posts_custom_column', 'pc_form_co
 	}
 
 
-/*----------  Liens sous le titre  ----------*/
+/*----------  Actions individuelles  ----------*/
 
-add_filter( 'post_row_actions', 'pc_form_contact_edit_row_actions', 10, 2 );
+add_filter( 'post_row_actions', 'pc_form_contact_edit_posts_row_actions', 10, 2 );
 
-	function pc_form_contact_edit_row_actions( $actions, $post ) {
+	function pc_form_contact_edit_posts_row_actions( $actions, $post ) {
 
 		if ( $post->post_type == FORM_CONTACT_POST_SLUG ) {
 			unset($actions['edit']);
@@ -122,9 +122,9 @@ add_filter( 'post_row_actions', 'pc_form_contact_edit_row_actions', 10, 2 );
 
 /*----------  Accès aux détails pour les éditeurs  ----------*/
  
-add_action( 'admin_init', 'pc_form_contact_admin_menu_capabilities', 999 );
+add_action( 'admin_init', 'pc_form_contact_edit_capabilities', 999 );
 
-	function pc_form_contact_admin_menu_capabilities() {
+	function pc_form_contact_edit_capabilities() {
 		
 		$role = get_role( 'editor' );
 		$role->add_cap( 'edit_others_messages' );
@@ -138,37 +138,23 @@ add_action( 'admin_init', 'pc_form_contact_admin_menu_capabilities', 999 );
 =            Détail du post            =
 ======================================*/
 
-/*----------  Pas de métaboxe Publier  ----------*/
-
-add_action( 'admin_menu' , 'pc_form_contact_admin_edit_metaboxes' );
-
-	function pc_form_contact_admin_edit_metaboxes() {
-		remove_meta_box( 'submitdiv' , FORM_CONTACT_POST_SLUG , 'normal' );
-	}
-
-
 /*----------  Pas de titre dans le détail du post  ----------*/
 
-add_filter( 'admin_body_class', 'pc_form_contact_admin_edit_body_class', 10, 1 );
+add_action( 'init', 'pc_form_contact_remove_post_type_support' );
 
-	function pc_form_contact_admin_edit_body_class( $classes ) {
+function pc_form_contact_remove_post_type_support() {
 
-		global $pagenow;
-		$screen = get_current_screen();
-		if ( $pagenow =='post.php' && $screen->post_type == FORM_CONTACT_POST_SLUG ) {
-			$classes .= ' pc-post-contact';
-			
-		}
-		return $classes;
+	remove_post_type_support( FORM_CONTACT_POST_SLUG, 'title' );
 
-	}
+}
 
-add_action( 'admin_head', 'pc_form_contact_admin_add_css_inline' );
-	
-	function pc_form_contact_admin_add_css_inline() { 
-	
-		echo '<style>.pc-post-contact #post-body-content { display:none }</style>';
-	
+
+/*----------  Pas de métaboxe Publier  ----------*/
+
+add_action( 'admin_menu' , 'pc_form_contact_remove_metaboxe' );
+
+	function pc_form_contact_remove_metaboxe() {
+		remove_meta_box( 'submitdiv' , FORM_CONTACT_POST_SLUG , 'normal' );
 	}
 
 
@@ -179,7 +165,7 @@ add_action( 'admin_init', function() {
 	add_meta_box(
 		'post-contact-infos',
 		'Détails et suppression',
-		'pc_form_contact_admin_metabox_actions',
+		'pc_form_contact_metabox_actions',
 		array( FORM_CONTACT_POST_SLUG ),
 		'side',
 		'high'
@@ -187,7 +173,7 @@ add_action( 'admin_init', function() {
 
 } );
 
-function pc_form_contact_admin_metabox_actions( $post ) {
+function pc_form_contact_metabox_actions( $post ) {
 
 	$page_from_id = get_post_meta( $post->ID, 'contact-from-page', true );
 	

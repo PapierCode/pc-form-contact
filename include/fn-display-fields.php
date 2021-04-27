@@ -22,14 +22,14 @@
 
 function pc_display_form_contact_label( $for, $datas ) {
 
-    global $form_contact_texts, $settings_project;
+    global $form_contact_texts;
 
     $txt = ( isset($datas['form-label']) ) ? $datas['form-label'] : $datas['label'];
     if ( isset($datas['required']) && $datas['required'] == true ) { $txt .= $form_contact_texts['label-required']; }
 
 	// lien CGU
 	if ( strpos( $txt, '{{cgu}}') !== false ) {
-		$txt = str_replace( '{{cgu}}', get_the_permalink($settings_project['cgu-page']), $txt );
+		$txt = str_replace( '{{cgu}}', get_privacy_policy_url(), $txt );
 	}
 	
     echo '<label class="form-label" for="'.$for.'"><span>'.$txt.'</span></label>';

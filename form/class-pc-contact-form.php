@@ -342,7 +342,7 @@ class PC_Contact_Form {
 		
 		$notification_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>';
 
-		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_before_fields', '<p><em>Formulaire publié sur la page :</em> <a href="'.$this->pc_post->permalink.'" title="Voir la page">'.$this->pc_post->title.'</a></p>' );
+		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_start', '<p><em>Formulaire publié sur la page :</em> <a href="'.$this->pc_post->permalink.'" title="Voir la page">'.$this->pc_post->title.'</a></p>' );
 		
 		// champs
 		if ( apply_filters( 'pc_filter_form_contact_notification_fields_display', true ) ) {
@@ -368,7 +368,7 @@ class PC_Contact_Form {
 			}
 		}
 		
-		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_after_fields', $body_content );
+		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_end', $body_content );
 		$notification_content .= $body_content.'</body></html>';
 
 

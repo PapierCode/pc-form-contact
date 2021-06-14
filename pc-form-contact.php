@@ -3,32 +3,34 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.1.0
+Version: 3.2.0
 Author: Papier Codé
 */
 
 
-/*=================================================
-=            Création du post Messages            =
-=================================================*/
+/*=====================================================
+=            Post Messages & form settings            =
+=====================================================*/
 
-add_action( 'after_setup_theme', function() {
+add_action( 'after_setup_theme', 'pc_contact_form_setup' );
+
+	function pc_contact_form_setup() {
 
 		// post
 		define('FORM_CONTACT_POST_SLUG', 'contact');
-		include 'include/post.php';
-		include 'include/post-fields.php';
-		include 'include/post-admin.php';
+		include 'post/post.php';
+		include 'post/post-fields.php';
+		include 'post/post-admin.php';
 
 		// paramètres
-		include 'include/settings.php';
+		include 'form/form-admin.php';
 		global $settings_form_contact;
 		$settings_form_contact = get_option('form-contact-settings-option');
 
-});
+	}
 
 
-/*=====  FIN Création du post Messages  =====*/
+/*=====  FIN Post Messages & form settings  =====*/
 
 /*========================================================
 =            Ajout de l'option dans les pages            =
@@ -40,7 +42,7 @@ function pc_form_contact_edit_content_from( $settings_project ) {
 
 	$settings_project['page-content-from']['contactform'] = array(
 		'Formulaire de contact',
-		dirname( __FILE__ ).'/include/template.php'
+		dirname( __FILE__ ).'/form/form-template.php'
 	);
 
 	return $settings_project;
@@ -54,9 +56,11 @@ function pc_form_contact_edit_content_from( $settings_project ) {
 =            Création du formulaire            =
 ==============================================*/
 
-add_action( 'wp', function() {
+add_action( 'wp', 'pc_contact_form_init', 100 );
 
-		include 'include/class-pc-contact-form.php';
+	function pc_contact_form_init() {
+
+		include 'form/class-pc-contact-form.php';
 
 		global $pc_post, $post_contact_fields, $pc_contact_form;
 
@@ -64,7 +68,7 @@ add_action( 'wp', function() {
 			$pc_contact_form = new PC_Contact_Form( $post_contact_fields, $pc_post );
 		}
 
-}, 100 );
+	}
 
 
 /*=====  FIN Création du formulaire  =====*/

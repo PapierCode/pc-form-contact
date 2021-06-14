@@ -67,11 +67,11 @@ class PC_Contact_Form {
 		$to_subject = ( isset( $settings_form_contact['form-subject'] ) && '' != $settings_form_contact['form-subject'] )? $settings_form_contact['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
 
 		$this->notification = array(
-			'to-email' 		=> $to_email,							// email du destinataire
-			'to-subject' 	=> html_entity_decode( $to_subject ),	// sujet de l'email
-			'from-name'		=> 'Sans nom',							// nom de l'expéditeur
-			'from-email'	=> '',									// email de l'expéditeur
-			'content'		=> ''									// contenu de l'email
+			'to-email' 		=> $to_email,	// email du destinataire
+			'to-subject' 	=> $to_subject,	// sujet de l'email
+			'from-name'		=> 'Sans nom',	// nom de l'expéditeur
+			'from-email'	=> '',			// email de l'expéditeur
+			'content'		=> ''			// contenu de l'email
 		);
 
 		/*----------  Validaiton du formulaire  ----------*/
@@ -92,10 +92,12 @@ class PC_Contact_Form {
 	
 		foreach ( $post_fields['fields'] as $field ) {
 
+			// suivant si conditionné à une variable d'url vide
+			if ( isset( $field['form-in-if-query-var'] ) && '' == get_query_var( $field['form-query-var'] ) ) { continue; }
 			// attributs id/name
 			$name = $post_fields['prefix'].'-'.$field['id'];
 
-			// paramètres
+			// paramètres de base
 			$params = array(
 				'type' 	=> $field['type'],
 				'label'	=> ( isset( $field['form-label'] ) ) ? $field['form-label'] : $field['label'],
@@ -141,7 +143,7 @@ class PC_Contact_Form {
 			if ( isset( $field['notification-from-name'] ) ) { $params['notification-from-name'] = true; }
 			if ( isset( $field['notification-not-in'] ) ) { $params['notification-not-in'] = true; }
 
-			// ajout à la liste
+			// ajout à la liste		
 			$this->fields[$name] = $params;
 
 		}
@@ -173,9 +175,11 @@ class PC_Contact_Form {
 
 					if ( !isset($_POST[$name]) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] = true;
+
 						if ( isset( $params['rgpd'] ) ) {
 							$this->fields[$name]['msg-error'] = 'Vous devez <strong>accepter les Conditions Générales d\'Utilisation</strong>.';
 						}
+
 					} else {
 						$this->fields[$name]['attrs'][] = 'checked';
 						$this->fields[$name]['value'] = 1;
@@ -187,12 +191,14 @@ class PC_Contact_Form {
 
 					if ( ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) ) {
 						$this->fields[$name]['error'] = true;
+
 					} else {
 
 						if ( !is_email( trim( $_POST[$name] ) ) ) {
 							$this->fields[$name]['value'] = $_POST[$name];
 							$this->fields[$name]['error'] = true;
 							$this->fields[$name]['msg-error'] = 'Le format du champ <strong>'.$params['label'].'</strong> n\'est pas valide.';
+
 						} else {
 							$this->fields[$name]['value'] = sanitize_email( $_POST[$name] );
 							if ( isset( $params['notification-from-email'] ) ) { $this->notification['from-email'] = $this->fields[$name]['value']; }
@@ -240,11 +246,7 @@ class PC_Contact_Form {
 		}
 
 		// si captcha en erreur
-		if ( is_object( $this->captcha ) && false === $this->captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) ) {
-
-			$this->errors['captcha'] = true;
-
-		}
+		if ( is_object( $this->captcha ) && false === $this->captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) ) { $this->errors['captcha'] = true; }
 
 	}
 
@@ -282,11 +284,12 @@ class PC_Contact_Form {
 
 			// valeur à afficher
 			$value = '';
+
 			if ( isset( $params['query-var'] ) && '' !== get_query_var( $params['query-var'] ) ) {
 				$value = get_query_var( $params['query-var'] );
 			} 
 			if ( isset( $params['value'] ) ) { $value = $params['value']; }
-			
+		
 			// affichage des champs
 			echo '<li class="'.implode( ' ', $params['css'] ).'">';
 
@@ -339,32 +342,34 @@ class PC_Contact_Form {
 		
 		$notification_content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>';
 
-		// page d'origine
-		$this->notification['content'] = '<p><em>Formulaire publié sur la page :</em> <a href="'.$this->pc_post->permalink.'" title="Voir la page">'.$this->pc_post->title.'</a></p>';
-					
+		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_before_fields', '<p><em>Formulaire publié sur la page :</em> <a href="'.$this->pc_post->permalink.'" title="Voir la page">'.$this->pc_post->title.'</a></p>' );
+		
 		// champs
-		foreach ( $this->fields as $name => $params ) {
+		if ( apply_filters( 'pc_filter_form_contact_notification_fields_display', true ) ) {
 			
-			if ( !isset( $params['notification-not-in'] ) ) {
-		
-				switch ( $params['type'] ) {
+			foreach ( $this->fields as $name => $params ) {
+				
+				if ( !isset( $params['notification-not-in'] ) ) {
+			
+					switch ( $params['type'] ) {
 
-					case 'checkbox':
-						$this->notification['content'] .= '<p><strong>'.$params['label'].' :</strong> oui</p>';
-						break;
-					
-					default:
-						$this->notification['content'] .= '<p><strong>'.$params['label'].' :</strong> '.$params['value'].'</p>';
-						break;
+						case 'checkbox':
+							$body_content .= '<p><strong>'.$params['label'].' :</strong> oui</p>';
+							break;
+						
+						default:
+							$body_content .= '<p><strong>'.$params['label'].' :</strong> '.$params['value'].'</p>';
+							break;
 
+					}
+			
 				}
-		
+			
 			}
-		
 		}
 		
-		$notification_content .= apply_filters( 'pc_filter_form_contact_notification', $this->notification['content'] );
-		$notification_content .= '</body></html>';
+		$body_content = apply_filters( 'pc_filter_form_contact_notification_content_after_fields', $body_content );
+		$notification_content .= $body_content.'</body></html>';
 
 
 		/*----------  Entêtes  ----------*/
@@ -377,9 +382,11 @@ class PC_Contact_Form {
 
 		/*----------  Envoi  ----------*/
 
+		$this->notification = apply_filters( 'pc_filter_form_contact_notification', $this->notification );
+
 		$notification_sent = wp_mail(
 			$this->notification['to-email'],
-			$this->notification['to-subject'],
+			html_entity_decode( $this->notification['to-subject'] ),
 			$notification_content,
 			$this->notification['headers']
 		);
@@ -437,7 +444,13 @@ class PC_Contact_Form {
 		// validaton des champs
 		$this->validation_fields();
 
-		if ( !$this->errors['field'] && !$this->errors['captcha'] ) { 
+		if ( $this->errors['field'] || $this->errors['captcha'] ) { 
+			
+			// meta title
+			add_filter( 'pc_filter_seo_metas', array( $this, 'display_meta_title_messages' ), 10, 1 );
+
+
+		} else {
 			
 			// envoi notification
 			$this->send_notification();
@@ -465,11 +478,6 @@ class PC_Contact_Form {
 				}
 
 			}
-
-		} else {
-			
-			// meta title
-			add_filter( 'pc_filter_seo_metas', array( $this, 'display_meta_title_messages' ), 10, 1 );
 
 		}
 
@@ -582,8 +590,6 @@ class PC_Contact_Form {
 
 		echo '</form>';
 		echo '</div>';
-
-		pc_var($this->fields);
 
 	}
 	

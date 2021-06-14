@@ -63,7 +63,7 @@ class PC_Contact_Form {
 		/*----------  Notification  ----------*/
 		
 		global $settings_form_contact;
-		$to_email = ( isset( $settings_form_contact['form-for'] ) && '' != $settings_form_contact['form-for'] ) ? $settings_form_contact['form-for'] : 'no-reply@papier-code.fr';
+		$to_email = ( isset( $settings_form_contact['form-for'] ) && '' != $settings_form_contact['form-for'] ) ? $settings_form_contact['form-for'] : 'contact@papier-code.fr';
 		$to_subject = ( isset( $settings_form_contact['form-subject'] ) && '' != $settings_form_contact['form-subject'] )? $settings_form_contact['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
 
 		$this->notification = array(
@@ -132,6 +132,9 @@ class PC_Contact_Form {
 
 			// RGPD checkbox ?
 			if ( isset( $field['form-rgpd'] ) ) { $params['rgpd'] = true; }
+
+			// associé à une variable d'url
+			if ( isset( $field['form-query-var'] ) ) { $params['query-var'] = $field['form-query-var']; }
 
 			// paramètres notification
 			if ( isset( $field['notification-from-email'] ) ) { $params['notification-from-email'] = true; }
@@ -278,7 +281,11 @@ class PC_Contact_Form {
 		foreach ( $this->fields as $name => $params ) {
 
 			// valeur à afficher
-			$value = ( isset( $params['value'] ) ) ? $params['value'] : '';
+			$value = '';
+			if ( isset( $params['query-var'] ) && '' !== get_query_var( $params['query-var'] ) ) {
+				$value = get_query_var( $params['query-var'] );
+			} 
+			if ( isset( $params['value'] ) ) { $value = $params['value']; }
 			
 			// affichage des champs
 			echo '<li class="'.implode( ' ', $params['css'] ).'">';
@@ -575,6 +582,8 @@ class PC_Contact_Form {
 
 		echo '</form>';
 		echo '</div>';
+
+		pc_var($this->fields);
 
 	}
 	

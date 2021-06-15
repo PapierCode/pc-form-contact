@@ -74,7 +74,7 @@ class PC_Contact_Form {
 			'content'		=> ''			// contenu de l'email
 		);
 
-		/*----------  Validaiton du formulaire  ----------*/
+		/*----------  Validation du formulaire  ----------*/
 		
 		if ( isset($_POST['none-pc-contact-form']) && wp_verify_nonce( $_POST['none-pc-contact-form'], basename( __FILE__ ) ) ) {
 			$this->validation_form();
@@ -92,7 +92,7 @@ class PC_Contact_Form {
 	
 		foreach ( $post_fields['fields'] as $field ) {
 
-			// suivant si conditionné à une variable d'url vide
+			// suivant si conditionné à une variable
 			if ( isset( $field['form-in-if-query-var'] ) && '' == get_query_var( $field['form-query-var'] ) ) { continue; }
 			// attributs id/name
 			$name = $post_fields['prefix'].'-'.$field['id'];
@@ -572,7 +572,7 @@ class PC_Contact_Form {
 				if ( is_object( $this->captcha ) ) {
 					
 					echo '<li class="form-item form-item--captcha'.( $this->errors['captcha'] ? ' form-item--error' : '').'">';
-						echo '<span class="form-label" aria-hidden="true">';
+						echo '<span class="label-like form-label" aria-hidden="true">';
 							echo $this->texts['label-captcha'].$this->texts['label-required'];
 						echo '</span>';
 							echo $this->captcha->script();

@@ -152,8 +152,8 @@ class PC_Contact_Form {
 
 		// création captcha
 		global $settings_pc;
-		if ( '' != $settings_pc['google-recaptcha-site'] && '' != $settings_pc['google-recaptcha-secret'] ) {
-			$this->captcha = new PC_recaptcha( $settings_pc['google-recaptcha-site'], $settings_pc['google-recaptcha-secret'] );
+		if ( '' != $settings_pc['hcaptcha-site'] && '' != $settings_pc['hcaptcha-secret'] ) {
+			$this->captcha = new PC_hcaptcha( $settings_pc['hcaptcha-site'], $settings_pc['hcaptcha-secret'] );
 		}
 
 	}
@@ -246,7 +246,7 @@ class PC_Contact_Form {
 		}
 
 		// si captcha en erreur
-		if ( is_object( $this->captcha ) && false === $this->captcha->isValid( $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ) ) { $this->errors['captcha'] = true; }
+		if ( is_object( $this->captcha ) && false === $this->captcha->validate( $_POST['h-captcha-response'] ) ) { $this->errors['captcha'] = true; }
 
 	}
 
@@ -514,7 +514,7 @@ class PC_Contact_Form {
 			}			
 
 			if ( $this->errors['captcha'] ) {
-				$message_error .= '<br/>Cocher la case <strong>Je ne suis pas un robot</strong>, et si nécessaire, suivez les instructions.';
+				$message_error .= '<br/>Cocher la case <strong>Je suis un humain</strong>, et si nécessaire suivez les instructions.';
 			}
 
 			if ( $this->errors['notification'] || $this->errors['post'] ) {
@@ -575,8 +575,7 @@ class PC_Contact_Form {
 						echo '<span class="label-like form-label" aria-hidden="true">';
 							echo $this->texts['label-captcha'].$this->texts['label-required'];
 						echo '</span>';
-							echo $this->captcha->script();
-							echo $this->captcha->html();
+						$this->captcha->display();
 					echo '</li>';
 
 				}

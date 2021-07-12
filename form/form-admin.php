@@ -14,14 +14,14 @@ if ( class_exists('PC_Add_Admin_Page') ) {
 
     $form_contact_settings_fields = array(        
         array(
-            'title'     => 'Formulaire de contact',
+            'title'     => 'Notification de nouveau message',
             'id'        => 'contact-form',
             'prefix'    => 'form',
             'fields'    => array(
                 array(
                     'type'      => 'text',
                     'label_for' => 'for',
-                    'label'     => 'Destinataires',
+                    'label'     => 'Destinataire(s)',
                     'desc'      => '1 ou plusieurs e-mails séparés par des virgules, sans espaces.',
                     'css'       => 'width:100%;',
                     'attr'      => 'placeholder="contact@mon-site.fr,devis@gmail.com"',
@@ -30,7 +30,7 @@ if ( class_exists('PC_Add_Admin_Page') ) {
                 array(
                     'type'      => 'text',
                     'label_for' => 'subject',
-                    'label'     => 'Sujet de l\'e-mail',
+                    'label'     => 'Sujet',
                     'css'       => 'width:100%;',
                     'attr'      => 'placeholder="Formulaire de contact"',
                     'required'  => true

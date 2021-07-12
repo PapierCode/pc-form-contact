@@ -19,10 +19,10 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
 	    'add_new'               => 'Ajouter un message',
 	    'add_new_item'          => 'Ajouter un message',
 	    'new_item'              => 'Ajouter un message',
-	    'edit_item'             => 'Afficher le message',
+	    'edit_item'             => 'Détails du message',
 	    'all_items'             => 'Tous les messages',
 		'not_found'             => 'Aucun message',
-		'search_items'			=> 'Rechercher dans les messages'
+		'search_items'			=> 'Rechercher'
 	);
 
 

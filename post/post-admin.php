@@ -164,23 +164,35 @@ add_action( 'admin_init', function() {
 
 	add_meta_box(
 		'post-contact-infos',
-		'Détails et suppression',
-		'pc_form_contact_metabox_actions',
+		'Date & origine',
+		'pc_form_contact_metabox_origin',
 		array( FORM_CONTACT_POST_SLUG ),
 		'side',
 		'high'
 	);
+	add_meta_box(
+		'post-contact-trash',
+		'Suppression',
+		'pc_form_contact_metabox_trash',
+		array( FORM_CONTACT_POST_SLUG ),
+		'side',
+		'low'
+	);
 
 } );
 
-function pc_form_contact_metabox_actions( $post ) {
+function pc_form_contact_metabox_origin( $post ) {
 
 	$page_from_id = get_post_meta( $post->ID, 'contact-from-page', true );
 	
-	echo '<p><strong>Envoyé le '.get_the_date('d F Y',$post->ID).'</strong>.</p>';
+	echo '<p>Envoyé le <strong>'.get_the_date('d F Y',$post->ID).'</strong>.</p>';
 	echo '<p>Depuis la page : <a href="'.get_the_permalink( $page_from_id ).'" title="Voir la page">'.get_the_title( $page_from_id ).'</a></p>';
+
+}
+
+function pc_form_contact_metabox_trash( $post ) {
 	if ( current_user_can( 'delete_others_posts' ) ) {
-		echo '<p style="padding-top:1em;border-top:1px solid #ccd0d4"><a class="button button-primary" href="'.get_delete_post_link($post->ID).'" title="Placer dans la corbeille">Supprimer</a></p>';
+		echo '<p><a class="button button-primary" href="'.get_delete_post_link($post->ID).'">Mettre à la corbeille</a></p>';
 	}
 
 }

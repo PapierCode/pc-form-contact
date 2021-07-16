@@ -153,7 +153,7 @@ class PC_Contact_Form {
 		// création captcha
 		global $settings_pc;
 		if ( '' != $settings_pc['hcaptcha-site'] && '' != $settings_pc['hcaptcha-secret'] ) {
-			$this->captcha = new PC_hcaptcha( $settings_pc['hcaptcha-site'], $settings_pc['hcaptcha-secret'] );
+			$this->captcha = new PC_Hcaptcha( $settings_pc['hcaptcha-site'], $settings_pc['hcaptcha-secret'] );
 		}
 
 	}

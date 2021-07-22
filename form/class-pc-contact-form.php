@@ -582,7 +582,7 @@ class PC_Contact_Form {
 				
 				// submit
 				echo '<li class="form-item form-item--submit">';
-					echo '<button type="submit" title='.$this->texts['submit-title'].'" class="'.implode( ' ', $this->css['button-submit'] ).'"><span class="text">'.$this->texts['submit-txt'].'</span></button>';
+					echo '<button type="submit" title="'.$this->texts['submit-title'].'" class="'.implode( ' ', $this->css['button-submit'] ).'"><span class="text">'.$this->texts['submit-txt'].'</span></button>';
 				echo '</li>';
 
 			echo '</ul>';

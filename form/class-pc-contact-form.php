@@ -2,17 +2,17 @@
 
 class PC_Contact_Form {
 
-	public $pc_post;			// [object] post en cours
-	private $captcha;			// [object] captcha
+	public $pc_post;				// [object] post en cours
+	private $captcha;				// [object] captcha
 
-	private $texts;				// [array] textes, exceptés les champs
-	private $css;				// [array] classes css, exceptés les champs
-	private $notification;		// [array] paramètres notification
+	private $texts;					// [array] textes, exceptés les champs
+	private $css;					// [array] classes css, exceptés les champs
+	private $notification;			// [array] paramètres notification
 
-	public $fields = array();	// [array] liste & paramètres des champs
+	public $fields = array();		// [array] liste & paramètres des champs
 
-	public $errors;				// [array][bool] types d'errreurs
-	public $done;				// [bool] terminé
+	public $errors;					// [array][bool] types d'errreurs
+	public $done;					// [bool] terminé
 
 
 	/*=================================
@@ -42,7 +42,6 @@ class PC_Contact_Form {
 		
 		$this->texts = apply_filters( 'pc_filter_form_contact_texts', array(
 			'label-required'	=> '&nbsp;<span class="form-label-required">(obligatoire)</span>',
-			'label-captcha'		=> 'Protection contre les spams',
 			'submit-txt'		=> 'Envoyer',
 			'submit-title'		=> 'Envoyer un e-mail',
 			'msg-error'			=> 'Le formulaire contient des erreurs',
@@ -55,6 +54,22 @@ class PC_Contact_Form {
 			'form-container' => array( 'form', 'form--contact' ),
 			'button-submit'	=> array( 'form-submit', 'button', 'button--xl', 'button--color-1', 'button--red' )
 		) );
+
+		/*----------  Création captcha  ----------*/
+		
+		global $settings_pc;
+
+		if ( 'hcaptcha' == $settings_pc['contactform-captcha'] && '' != $settings_pc['hcaptcha-site'] && '' != $settings_pc['hcaptcha-secret'] ) {
+
+			$this->captcha = new PC_Hcaptcha( $settings_pc['hcaptcha-site'], $settings_pc['hcaptcha-secret'] );
+			$this->texts['msg-error-captcha'] = '<br/>Cochez la case <strong>Je suis un humain</strong>, et si nécessaire suivez les instructions.';
+
+		} else {
+
+			$this->captcha = new PC_MathCaptcha( $settings_pc['contactform-math-pass'], $settings_pc['contactform-math-iv'] );
+			$this->texts['msg-error-captcha'] = '<br/>Résolvez le calcul (protection contre les spams).';
+
+		}
 
 		/*----------  Configuration des champs  ----------*/
 		
@@ -150,12 +165,6 @@ class PC_Contact_Form {
 
 		$this->fields = apply_filters( 'pc_filter_form_contact_fields', $this->fields );
 
-		// création captcha
-		global $settings_pc;
-		if ( '' != $settings_pc['hcaptcha-site'] && '' != $settings_pc['hcaptcha-secret'] ) {
-			$this->captcha = new PC_Hcaptcha( $settings_pc['hcaptcha-site'], $settings_pc['hcaptcha-secret'] );
-		}
-
 	}
 	
 	
@@ -246,7 +255,7 @@ class PC_Contact_Form {
 		}
 
 		// si captcha en erreur
-		if ( is_object( $this->captcha ) && false === $this->captcha->validate( $_POST['h-captcha-response'] ) ) { $this->errors['captcha'] = true; }
+		if ( is_object( $this->captcha ) && false === $this->captcha->validate() ) { $this->errors['captcha'] = true; }
 
 	}
 
@@ -294,7 +303,7 @@ class PC_Contact_Form {
 			echo '<li class="'.implode( ' ', $params['css'] ).'">';
 
 				// label si
-				if ( in_array( $params['type'], array( 'text', 'email', 'textarea' ) ) ) {
+				if ( in_array( $params['type'], array( 'text', 'email', 'textarea', 'captcha' ) ) ) {
 					$this->display_label( $name, $params );
 				}
 				
@@ -514,7 +523,7 @@ class PC_Contact_Form {
 			}			
 
 			if ( $this->errors['captcha'] ) {
-				$message_error .= '<br/>Cocher la case <strong>Je suis un humain</strong>, et si nécessaire suivez les instructions.';
+				$message_error .= $this->texts['msg-error-captcha'];
 			}
 
 			if ( $this->errors['notification'] || $this->errors['post'] ) {
@@ -556,31 +565,54 @@ class PC_Contact_Form {
 	public function display_form() {
 
 		echo '<div id="form-contact" class="'.implode( ' ', $this->css['form-container'] ).'">';
-		
-		$this->display_content_messages();
 
 		echo '<form method="POST" action="#form-contact" aria-label="Formulaire de contact">';
+		
+			$this->display_content_messages();
 
 			wp_nonce_field( basename( __FILE__ ), 'none-pc-contact-form' );
 
 			echo '<ul class="form-list reset-list">';
 
-				// champs
+				/*----------  Champs  ----------*/
+				
 				$this->display_fields();
 
-				// captcha
-				if ( is_object( $this->captcha ) ) {
+
+				/*----------  Captcha  ----------*/
+				
+				global $settings_pc;
+
+				if ( 'hcaptcha' == $settings_pc['contactform-captcha'] && is_object( $this->captcha ) ) {
 					
-					echo '<li class="form-item form-item--captcha'.( $this->errors['captcha'] ? ' form-item--error' : '').'">';
+					echo '<li class="form-item form-item--captcha form-item--hcaptcha'.( $this->errors['captcha'] ? ' form-item--error' : '').'">';
 						echo '<span class="label-like form-label" aria-hidden="true">';
-							echo $this->texts['label-captcha'].$this->texts['label-required'];
+							echo 'Protection contre les spams'.$this->texts['label-required'];
 						echo '</span>';
 						$this->captcha->display();
 					echo '</li>';
 
+				} else {
+					
+					$math = $this->captcha->math;	
+
+					echo '<li class="form-item form-item--captcha form-item--mathcaptcha'.( $this->errors['captcha'] ? ' form-item--error' : '').'">';
+
+						$operator = ( 'add' == $math[2] ) ? 'plus' : 'moins';
+						$this->display_label( 'form-captcha', array(
+							'label'		=> 'Combien font '.$math[0].'&nbsp;'.$operator.'&nbsp;'.$math[1].'&nbsp;?',
+							'required'	=> true
+						) );
+
+						echo '<input type="number" id="form-captcha" name="form-captcha" value="" required /><input type="hidden" name="captcha-math" value="'.$this->captcha->get_encode_math().'" />';
+						
+					echo '</li>';
+
 				}
 				
-				// submit
+
+				/*----------  Submit  ----------*/
+				
 				echo '<li class="form-item form-item--submit">';
 					echo '<button type="submit" title="'.$this->texts['submit-title'].'" class="'.implode( ' ', $this->css['button-submit'] ).'" aria-label="Valider"><span class="text">'.$this->texts['submit-txt'].'</span></button>';
 				echo '</li>';

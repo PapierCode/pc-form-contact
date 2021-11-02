@@ -3,10 +3,51 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.3.5
+Version: 3.4.0
 Author: Papier Codé
 */
 
+
+add_filter( 'pc_filter_settings_pc_fields', 'test_pc_filter_settings_pc_fields' );
+
+function test_pc_filter_settings_pc_fields( $settings_pc_fields ) {
+
+	
+	$settings_pc_fields[] = array(
+		'title'     => 'Formulaire de contact',
+		'id'        => 'contactform',
+		'prefix'    => 'contactform',
+		'fields'    => array(
+			array(
+				'type'      => 'radio',
+				'label_for' => 'captcha',
+				'label'     => 'Type de captcha',
+				'options'	=> array(
+					'Calcul'	=> 'math',
+					'hCaptcha' 	=> 'hcaptcha'
+				),
+				'default'	=> 'math'
+			),
+			array(
+				'type'      => 'text',
+				'label_for' => 'math-pass',
+				'label'     => 'Calcul : mot de passe',
+				'css'		=> 'width:100%'
+			),
+			array(
+				'type'      => 'text',
+				'label_for' => 'math-iv',
+				'label'     => 'Calcul : vecteur',
+				'attr'		=> 'maxlength="16"',
+				'desc'		=> '16 caractères.',
+				'css'		=> 'width:100%'
+			)
+		)
+	);
+
+	return $settings_pc_fields;
+
+}
 
 /*=====================================================
 =            Post Messages & form settings            =

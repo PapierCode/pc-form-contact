@@ -21,6 +21,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'type'      				=> 'text',
 				'id'        				=> 'last-name',
 				'label'     				=> 'Nom',
+				'label-en'     				=> 'Last Name',
 				'attr'						=> 'readonly',
             	'css'       				=> 'width:100%',
 				'notification-from-name'	=> true // pour la notification mail
@@ -29,6 +30,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'type'      				=> 'text',
 				'id'        				=> 'name',
 				'label'     				=> 'Prénom',
+				'label-en'     				=> 'First Name',
 				'attr'						=> 'readonly',
 				'css'       				=> 'width:100%',
 			),
@@ -36,6 +38,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'type'      				=> 'text',
 				'id'        				=> 'phone',
 				'label'     				=> 'Téléphone',
+				'label-en'     				=> 'Phone',
 				'attr'						=> 'readonly',
 				'css'       				=> 'width:100%'
 			),
@@ -43,6 +46,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'type'      				=> 'email',
 				'id'        				=> 'mail',
 				'label'     				=> 'E-mail',
+				'label-en'     				=> 'E-mail',
 				'attr'						=> 'readonly',
             	'css'       				=> 'width:100%',
 				'required' 	    			=> true,
@@ -52,6 +56,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'type'      				=> 'textarea',
 				'id'        				=> 'message',
 				'label'     				=> 'Message',
+				'label-en'     				=> 'Message',
 				'attr'						=> 'readonly',
             	'css'       				=> 'width:100%',
 				'form-attr'					=> 'rows="5"', // pour le formulaire public
@@ -65,7 +70,9 @@ if ( class_exists('PC_Add_metabox') ) {
 				'required' 	    			=> true,
 				'form-rgpd'					=> true,
 				'form-label'				=> 'J\'ai lu et j\'accepte les <a href="{{cgu}}">conditions générales d\'utilisation</a>', // pour le formulaire public
+				'form-label-en'				=> 'I have read and accept the <a href="{{cgu}}">general conditions of use</a>', // pour le formulaire public
 				'form-desc'					=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
+				'form-desc-en'				=> 'The data entered in this form is reserved for us and will not be transferred or sold to third parties.', // pour le formulaire public,
 				'notification-not-in'		=> true // pour la notification mail
 
 			)

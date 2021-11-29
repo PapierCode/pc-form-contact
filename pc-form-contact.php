@@ -3,7 +3,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.5.0
+Version: 3.6.0
 Author: Papier Codé
 */
 

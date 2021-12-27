@@ -161,7 +161,7 @@ class PC_Contact_Form {
 					'form-item--'.$field['type'],
 					'form-item--'.$name
 				),
-				'attrs' => array(),
+				'attr' => array(),
 				'error' => false
 			);
 
@@ -182,13 +182,13 @@ class PC_Contact_Form {
 
 			// obligatoire			
 			if ( isset( $field['required'] ) ) {
-				$params['attrs'][] = 'required';
+				$params['attr'][] = 'required';
 				$params['required'] = true;
 			}
 
 			// attributs customs
-			if ( isset( $field['form-attrs'] ) ) { 
-				$params['attrs'] = array_merge( $params['attrs'], $field['form-attrs'] );
+			if ( isset( $field['form-attr'] ) ) { 
+				$params['attr'] = array_merge( $params['attr'], explode( ' ' , $field['form-attr'] ) );
 			}
 
 			// description
@@ -201,7 +201,7 @@ class PC_Contact_Form {
 						$params['desc'] = $field['form-desc-en'];
 						break;
 				}
-				$params['attrs'][] = 'aria-describedby="form-item-desc-'.$name.'"';
+				$params['attr'][] = 'aria-describedby="form-item-desc-'.$name.'"';
 			}
 
 			// RGPD checkbox ?
@@ -247,7 +247,7 @@ class PC_Contact_Form {
 						}
 
 					} else {
-						$this->fields[$name]['attrs'][] = 'checked';
+						$this->fields[$name]['attr'][] = 'checked';
 						$this->fields[$name]['value'] = 1;
 					}
 
@@ -303,7 +303,7 @@ class PC_Contact_Form {
 				// css erreur
 				$this->fields[$name]['css'][] = 'form-item--error';
 				// aria invalid
-				$this->fields[$name]['attrs'][] = 'aria-invalid="true"';
+				$this->fields[$name]['attr'][] = 'aria-invalid="true"';
 				// erreur formulaire
 				$this->errors['field'] = true;
 
@@ -370,15 +370,15 @@ class PC_Contact_Form {
 
 						case 'text':
 						case 'email':
-							echo '<input type="'.$params['type'].'" id="'.$name.'" name="'.$name.'" value="'.$value.'" '.implode( ' ', $params['attrs'] ).'/>';
+							echo '<input type="'.$params['type'].'" id="'.$name.'" name="'.$name.'" value="'.$value.'" '.implode( ' ', $params['attr'] ).'/>';
 							break;
 
 						case 'textarea':
-							echo '<textarea id="'.$name.'" name="'.$name.'"'.implode( ' ', $params['attrs'] ).'>'.$value.'</textarea>';
+							echo '<textarea id="'.$name.'" name="'.$name.'" '.implode( ' ', $params['attr'] ).'>'.$value.'</textarea>';
 							break;
 						
 						case 'checkbox':
-							echo '<input class="visually-hidden" type="checkbox" name="'.$name.'" id="'.$name.'" value="1"'.implode( ' ', $params['attrs'] ).' />';
+							echo '<input class="visually-hidden" type="checkbox" name="'.$name.'" id="'.$name.'" value="1" '.implode( ' ', $params['attr'] ).' />';
 							$this->display_label( $name, $params );
 							break;
 
@@ -539,7 +539,7 @@ class PC_Contact_Form {
 					foreach ( $this->fields as $name => $params ) {
 						unset( $this->fields[$name]['value'] );
 						if ( 'checkbox' == $params['type'] ) { 
-							$this->fields[$name]['attrs'] = array_diff( $this->fields[$name]['attrs'], array('checked') );}
+							$this->fields[$name]['attr'] = array_diff( $this->fields[$name]['attr'], array('checked') );}
 					}
 					
 				}

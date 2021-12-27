@@ -24,6 +24,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label-en'     				=> 'Last Name',
 				'attr'						=> 'readonly',
             	'css'       				=> 'width:100%',
+				'form-attr'					=> 'autocomplete="family-name"', // pour le formulaire public
 				'notification-from-name'	=> true // pour la notification mail
 			),
 			array(
@@ -33,6 +34,7 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label-en'     				=> 'First Name',
 				'attr'						=> 'readonly',
 				'css'       				=> 'width:100%',
+				'form-attr'					=> 'autocomplete="given-name"', // pour le formulaire public
 			),
 			array(
 				'type'      				=> 'text',
@@ -40,7 +42,8 @@ if ( class_exists('PC_Add_metabox') ) {
 				'label'     				=> 'Téléphone',
 				'label-en'     				=> 'Phone',
 				'attr'						=> 'readonly',
-				'css'       				=> 'width:100%'
+				'css'       				=> 'width:100%',
+				'form-attr'					=> 'autocomplete="tel"'
 			),
 			array(
 				'type'      				=> 'email',
@@ -50,7 +53,8 @@ if ( class_exists('PC_Add_metabox') ) {
 				'attr'						=> 'readonly',
             	'css'       				=> 'width:100%',
 				'required' 	    			=> true,
-				'notification-from-email'	=> true // pour la notification mail
+				'notification-from-email'	=> true, // pour la notification mail
+				'form-attr'					=> 'autocomplete="email"'
 			),
 			array(
 				'type'      				=> 'textarea',

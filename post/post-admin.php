@@ -120,14 +120,20 @@ add_filter( 'post_row_actions', 'pc_form_contact_edit_posts_row_actions', 10, 2 
 	}
 
 
-/*----------  Accès aux détails pour les éditeurs  ----------*/
+/*----------  Accès aux détails pour les clients  ----------*/
  
 add_action( 'admin_init', 'pc_form_contact_edit_capabilities', 999 );
 
 	function pc_form_contact_edit_capabilities() {
 		
-		$role = get_role( 'editor' );
-		$role->add_cap( 'edit_others_messages' );
+		$users = array( 'editor', 'shop_manager' );
+
+		foreach ( $users as $user ) {
+			$role = get_role( $user );
+			if ( is_object( $role ) ) {
+				$role->add_cap( 'edit_others_messages' );
+			}
+		}
 
 	};
 

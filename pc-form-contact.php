@@ -3,16 +3,19 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.6.2
+Version: 3.6.3
 Author: Papier Codé
 */
 
 
-add_filter( 'pc_filter_settings_pc_fields', 'test_pc_filter_settings_pc_fields' );
+/*=========================================
+=            Options du plugin            =
+=========================================*/
 
-function test_pc_filter_settings_pc_fields( $settings_pc_fields ) {
+add_filter( 'pc_filter_settings_pc_fields', 'pc_contact_edit_settings_pc_fields' );
 
-	
+function pc_contact_edit_settings_pc_fields( $settings_pc_fields ) {
+
 	$settings_pc_fields[] = array(
 		'title'     => 'Formulaire de contact',
 		'id'        => 'contactform',
@@ -48,6 +51,9 @@ function test_pc_filter_settings_pc_fields( $settings_pc_fields ) {
 	return $settings_pc_fields;
 
 }
+
+
+/*=====  FIN Options du plugin  =====*/
 
 /*=====================================================
 =            Post Messages & form settings            =

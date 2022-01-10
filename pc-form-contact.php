@@ -3,14 +3,14 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.6.3
+Version: 3.6.4
 Author: Papier Codé
 */
 
 
-/*=========================================
-=            Options du plugin            =
-=========================================*/
+/*===========================================================
+=            Ajout des options dans les réglages            =
+===========================================================*/
 
 add_filter( 'pc_filter_settings_pc_fields', 'pc_contact_edit_settings_pc_fields' );
 
@@ -53,7 +53,27 @@ function pc_contact_edit_settings_pc_fields( $settings_pc_fields ) {
 }
 
 
-/*=====  FIN Options du plugin  =====*/
+/*=====  FIN Ajout des options dans les réglages  =====*/
+
+/*========================================================
+=            Ajout de l'option dans les pages            =
+========================================================*/
+	
+add_filter( 'pc_filter_settings_project', 'pc_form_contact_edit_content_from', 10, 1 );
+
+function pc_form_contact_edit_content_from( $settings_project ) {
+
+	$settings_project['page-content-from']['contactform'] = array(
+		'Formulaire de contact',
+		dirname( __FILE__ ).'/form/form-template.php'
+	);
+
+	return $settings_project;
+	
+}
+
+
+/*=====  FIN Ajout de l'option dans les pages  =====*/
 
 /*=====================================================
 =            Post Messages & form settings            =
@@ -79,26 +99,6 @@ add_action( 'after_setup_theme', 'pc_contact_form_setup' );
 
 /*=====  FIN Post Messages & form settings  =====*/
 
-/*========================================================
-=            Ajout de l'option dans les pages            =
-========================================================*/
-	
-add_filter( 'pc_filter_settings_project', 'pc_form_contact_edit_content_from', 10, 1 );
-
-function pc_form_contact_edit_content_from( $settings_project ) {
-
-	$settings_project['page-content-from']['contactform'] = array(
-		'Formulaire de contact',
-		dirname( __FILE__ ).'/form/form-template.php'
-	);
-
-	return $settings_project;
-	
-}
-
-
-/*=====  FIN Ajout de l'option dans les pages  =====*/
-
 /*==============================================
 =            Création du formulaire            =
 ==============================================*/
@@ -107,12 +107,23 @@ add_action( 'wp', 'pc_contact_form_init', 100 );
 
 	function pc_contact_form_init() {
 
-		include 'form/class-pc-contact-form.php';
+		if ( is_page() ) {
 
-		global $pc_post, $post_contact_fields, $pc_contact_form;
+			global $pc_post;
+			$metas = $pc_post->metas;
 
-		if ( class_exists( 'PC_Contact_Form' ) ) {
-			$pc_contact_form = new PC_Contact_Form( $post_contact_fields, $pc_post );
+			if ( isset( $metas['content-from'] ) && 'contactform' == $metas['content-from'] ) {
+
+				include 'form/class-pc-contact-form.php';
+
+				global $post_contact_fields, $pc_contact_form;
+
+				if ( class_exists( 'PC_Contact_Form' ) ) {
+					$pc_contact_form = new PC_Contact_Form( $post_contact_fields, $pc_post );
+				}
+
+			}
+
 		}
 
 	}

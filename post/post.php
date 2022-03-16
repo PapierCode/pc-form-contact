@@ -37,7 +37,7 @@ if ( class_exists( 'PC_Add_Custom_Post' ) ) {
         'exclude_from_search'   => true,
 		'publicly_queryable'    => false,
 		'capabilities'			=> array(
-			'create_posts' => false,
+			'create_posts' => 'do_not_allow',
 			'edit_others_posts' => 'edit_others_messages'
 		),
 		'map_meta_cap' => true,

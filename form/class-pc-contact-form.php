@@ -352,7 +352,7 @@ class PC_Contact_Form {
 			$value = '';
 
 			if ( isset( $params['query-var'] ) && '' !== get_query_var( $params['query-var'] ) ) {
-				$value = get_query_var( $params['query-var'] );
+				$value = stripslashes( get_query_var( $params['query-var'] ) );
 			} 
 			if ( isset( $params['value'] ) ) { $value = $params['value']; }
 		

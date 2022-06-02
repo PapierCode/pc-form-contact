@@ -279,7 +279,7 @@ class PC_Contact_Form {
 					if ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] =  true;
 					} else {
-						$this->fields[$name]['value'] = sanitize_text_field( $_POST[$name] );
+						$this->fields[$name]['value'] = sanitize_text_field( stripslashes($_POST[$name]) );
 						if ( isset( $params['notification-from-name'] ) ) { $this->notification['from-name'] = $this->fields[$name]['value']; }
 					}
 
@@ -290,7 +290,7 @@ class PC_Contact_Form {
 					if ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] =  true;
 					} else {
-						$this->fields[$name]['value'] = sanitize_textarea_field( $_POST[$name] );
+						$this->fields[$name]['value'] = sanitize_textarea_field( stripslashes($_POST[$name]) );
 					}
 
 					break;

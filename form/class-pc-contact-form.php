@@ -191,6 +191,11 @@ class PC_Contact_Form {
 				$params['attr'] = array_merge( $params['attr'], explode( ' ' , $field['form-attr'] ) );
 			}
 
+			// options select
+			if ( isset( $field['options'] ) ) {
+				$params['options'] = $field['options'];
+			}
+
 			// description
 			if ( isset( $field['form-desc'] ) || isset( $field['form-desc-en'] ) ) {
 				switch ( $this->lang ) {
@@ -275,6 +280,7 @@ class PC_Contact_Form {
 					break;
 				
 				case 'text':
+				case 'select':
 
 					if ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] =  true;
@@ -360,7 +366,7 @@ class PC_Contact_Form {
 			echo '<li class="'.implode( ' ', $params['css'] ).'">';
 
 				// label si
-				if ( in_array( $params['type'], array( 'text', 'email', 'textarea', 'captcha' ) ) ) {
+				if ( in_array( $params['type'], array( 'text', 'email', 'textarea', 'select', 'captcha' ) ) ) {
 					$this->display_label( $name, $params );
 				}
 				
@@ -375,6 +381,15 @@ class PC_Contact_Form {
 
 						case 'textarea':
 							echo '<textarea id="'.$name.'" name="'.$name.'" '.implode( ' ', $params['attr'] ).'>'.$value.'</textarea>';
+							break;
+
+						case 'select':
+							echo '<select id="'.$name.'" name="'.$name.'" '.implode( ' ', $params['attr'] ).'>';
+								echo '<option value=""></option>';
+								foreach ( $params['options'] as $option_label => $option_value ) {
+									echo '<option value="'.$option_value.'" '.selected($value,$option_value,false).'>'.$option_label.'</option>';
+								}
+							echo '</select>';
 							break;
 						
 						case 'checkbox':

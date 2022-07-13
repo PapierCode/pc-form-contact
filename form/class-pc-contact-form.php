@@ -251,7 +251,7 @@ class PC_Contact_Form {
 							$this->fields[$name]['msg-error'] = $this->texts['msg-error-field-rgpd'];
 						}
 
-					} else {
+					} else if ( isset( $_POST[$name] ) ) {
 						$this->fields[$name]['attr'][] = 'checked';
 						$this->fields[$name]['value'] = 1;
 					}
@@ -263,7 +263,7 @@ class PC_Contact_Form {
 					if ( ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) ) {
 						$this->fields[$name]['error'] = true;
 
-					} else {
+					} else if ( '' !== trim( $_POST[$name] ) ) {
 
 						if ( !is_email( trim( $_POST[$name] ) ) ) {
 							$this->fields[$name]['value'] = $_POST[$name];
@@ -284,7 +284,7 @@ class PC_Contact_Form {
 
 					if ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] =  true;
-					} else {
+					} else if ( '' !== trim( $_POST[$name] ) ) {
 						$this->fields[$name]['value'] = sanitize_text_field( stripslashes($_POST[$name]) );
 						if ( isset( $params['notification-from-name'] ) ) { $this->notification['from-name'] = $this->fields[$name]['value']; }
 					}
@@ -295,7 +295,7 @@ class PC_Contact_Form {
 
 					if ( '' === trim( $_POST[$name] ) && isset( $params['required'] ) ) {
 						$this->fields[$name]['error'] =  true;
-					} else {
+					} else if ( '' !== trim( $_POST[$name] ) ) {
 						$this->fields[$name]['value'] = sanitize_textarea_field( stripslashes($_POST[$name]) );
 					}
 
@@ -430,7 +430,7 @@ class PC_Contact_Form {
 			
 			foreach ( $this->fields as $name => $params ) {
 				
-				if ( !isset( $params['notification-not-in'] ) ) {
+				if ( !isset( $params['notification-not-in'] ) && isset( $params['value'] ) ) {
 			
 					switch ( $params['type'] ) {
 
@@ -492,8 +492,10 @@ class PC_Contact_Form {
 		// champs
 		$post_metas = array();
 		foreach ( $this->fields as $name => $params ) {
-			if ( '' != $params['value'] ) { $post_metas[$name] = $params['value']; }
-			if ( 'email' == $params['type'] ) { $post_title = $params['value'];	}
+			if ( isset( $params['value'] ) ) {
+				$post_metas[$name] = $params['value'];
+				if ( 'email' == $params['type'] ) { $post_title = $params['value'];	}
+			}
 		}
 		// page d'origine
 		$post_metas['contact-from-page'] = $this->pc_post->id;

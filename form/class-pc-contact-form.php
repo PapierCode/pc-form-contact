@@ -48,7 +48,7 @@ class PC_Contact_Form {
 		
 		$this->css = apply_filters( 'pc_filter_form_contact_css_classes', array(
 			'form-container' => array( 'form', 'form--contact' ),
-			'button-submit'	=> array( 'form-submit', 'button', 'button--xl', 'button--color-1', 'button--red' )
+			'button-submit'	=> array( 'form-submit', 'button' )
 		) );
 
 		/*----------  Création captcha  ----------*/

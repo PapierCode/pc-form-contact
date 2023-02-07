@@ -3,7 +3,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.7.2
+Version: 3.8.0
 Author: Papier Codé
 */
 
@@ -130,3 +130,42 @@ add_action( 'wp', 'pc_contact_form_init', 100 );
 
 
 /*=====  FIN Création du formulaire  =====*/
+
+/*========================================
+=            CRON suppression            =
+========================================*/
+
+if ( !wp_next_scheduled( 'pc_form_contact_cron' ) ) { 	wp_schedule_event( time(), 'daily', 'pc_form_contact_cron' ); }
+
+add_action( 'pc_form_contact_cron', 'pc_form_contact_cron_delete_messages' );
+
+	function pc_form_contact_cron_delete_messages() {
+
+		$posts_to_delete = get_posts( array(
+			'post_type' => FORM_CONTACT_POST_SLUG,
+			'posts_per_page' => -1,
+			'date_query' => array(
+				array(
+					'column' => 'post_date_gmt',
+					'before' => '1 year ago',
+				)
+			)
+		));
+
+		$nb_posts_deleted = 0;
+
+		if ( !empty( $posts_to_delete ) ) {
+
+			foreach ( $posts_to_delete as $post ) {
+				wp_delete_post( $post->ID, true );
+				$nb_posts_deleted++;
+			}		
+
+			mail( 'papiercode@gmail.com', 'PC Form Contact', $nb_posts_deleted.' suppression(s) pour '.get_bloginfo( 'name' ) );
+
+		}
+
+	}
+
+
+/*=====  FIN CRON suppression  =====*/

@@ -3,7 +3,7 @@
 Plugin Name: [PC] Form Contact
 Plugin URI: www.papier-code.fr
 Description: Formulaire de contact
-Version: 3.8.1
+Version: 3.8.2
 Author: Papier Codé
 */
 
@@ -140,13 +140,14 @@ add_filter( 'cron_schedules', 'pc_form_contact_cron_schedules' );
 	function pc_form_contact_cron_schedules( $schedules ) {
 		
 		$schedules['monthly'] = array(
-			'interval' => 2635200,
+			'interval' => MONTH_IN_SECONDS,
 			'display' => 'Once a month'
 		);
 
 		return $schedules;
 
 	}
+
 
 if ( !wp_next_scheduled( 'pc_form_contact_cron' ) ) { 	wp_schedule_event( time(), 'monthly', 'pc_form_contact_cron' ); }
 

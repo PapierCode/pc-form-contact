@@ -1,4 +1,76 @@
 <?php
+global $post_contact_fields;
+$post_contact_fields = array(
+	'prefix'        => 'contact',
+	'fields'        => array(
+		array(
+			'type'      				=> 'text',
+			'id'        				=> 'last-name',
+			'label'     				=> 'Nom',
+			'label-en'     				=> 'Last Name',
+			'attr'						=> 'readonly',
+			'css'       				=> 'width:100%',
+			'form-attr'					=> 'autocomplete="family-name"', // pour le formulaire public
+			'notification-from-name'	=> true // pour la notification mail
+		),
+		array(
+			'type'      				=> 'text',
+			'id'        				=> 'name',
+			'label'     				=> 'Prénom',
+			'label-en'     				=> 'First Name',
+			'attr'						=> 'readonly',
+			'css'       				=> 'width:100%',
+			'form-attr'					=> 'autocomplete="given-name"', // pour le formulaire public
+		),
+		array(
+			'type'      				=> 'text',
+			'id'        				=> 'phone',
+			'label'     				=> 'Téléphone',
+			'label-en'     				=> 'Phone',
+			'attr'						=> 'readonly',
+			'css'       				=> 'width:100%',
+			'form-attr'					=> 'autocomplete="tel"'
+		),
+		array(
+			'type'      				=> 'email',
+			'id'        				=> 'mail',
+			'label'     				=> 'E-mail',
+			'label-en'     				=> 'E-mail',
+			'attr'						=> 'readonly',
+			'css'       				=> 'width:100%',
+			'required' 	    			=> true,
+			'notification-from-email'	=> true, // pour la notification mail
+			'form-attr'					=> 'autocomplete="email"'
+		),
+		array(
+			'type'      				=> 'textarea',
+			'id'        				=> 'message',
+			'label'     				=> 'Message',
+			'label-en'     				=> 'Message',
+			'attr'						=> 'readonly',
+			'css'       				=> 'width:100%',
+			'form-attr'					=> 'rows="5"', // pour le formulaire public
+			'required' 	    			=> true
+		),
+		array(
+			'type'      				=> 'checkbox',
+			'id'        				=> 'cgu',
+			'label'     				=> 'CGU acceptées',
+			'attr'						=> 'disabled',
+			'required' 	    			=> true,
+			'form-rgpd'					=> true,
+			'form-label'				=> 'J\'ai lu et j\'accepte les <a href="{{cgu}}">conditions générales d\'utilisation</a>', // pour le formulaire public
+			'form-label-en'				=> 'I have read and accept the <a href="{{cgu}}">general conditions of use</a>', // pour le formulaire public
+			'form-desc'					=> 'Les données saisies dans ce formulaire nous sont réservées et ne seront pas cédées ou revendues à des tiers.', // pour le formulaire public,
+			'form-desc-en'				=> 'The data entered in this form is reserved for us and will not be transferred or sold to third parties.', // pour le formulaire public,
+			'notification-not-in'		=> true // pour la notification mail
+
+		)
+	)
+);
+
+// filtre
+$post_contact_fields = apply_filters( 'pc_filter_post_contact_fields', $post_contact_fields );
 
 class PC_Contact_Form {
 
@@ -71,9 +143,9 @@ class PC_Contact_Form {
 
 		/*----------  Notification  ----------*/
 		
-		global $settings_form_contact;
-		$to_email = ( isset( $settings_form_contact['form-for'] ) && '' != $settings_form_contact['form-for'] ) ? $settings_form_contact['form-for'] : 'contact@papier-code.fr';
-		$to_subject = ( isset( $settings_form_contact['form-subject'] ) && '' != $settings_form_contact['form-subject'] )? $settings_form_contact['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
+		global $settings_pc;
+		$to_email = ( isset( $settings_pc['form-for'] ) && '' != $settings_pc['form-for'] ) ? $settings_pc['form-for'] : 'contact@papier-code.fr';
+		$to_subject = ( isset( $settings_pc['form-subject'] ) && '' != $settings_pc['form-subject'] )? $settings_pc['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
 
 		$this->notification = array(
 			'to-email' 		=> $to_email,	// email du destinataire
@@ -487,34 +559,34 @@ class PC_Contact_Form {
 	=            Enregistrement du post            =
 	==============================================*/
 
-	private function insert_post() {
+	// private function insert_post() {
 
-		// champs
-		$post_metas = array();
-		foreach ( $this->fields as $name => $params ) {
-			if ( isset( $params['value'] ) ) {
-				$post_metas[$name] = $params['value'];
-				if ( 'email' == $params['type'] ) { $post_title = $params['value'];	}
-			}
-		}
-		// page d'origine
-		$post_metas['contact-from-page'] = $this->pc_post->id;
+	// 	// champs
+	// 	$post_metas = array();
+	// 	foreach ( $this->fields as $name => $params ) {
+	// 		if ( isset( $params['value'] ) ) {
+	// 			$post_metas[$name] = $params['value'];
+	// 			if ( 'email' == $params['type'] ) { $post_title = $params['value'];	}
+	// 		}
+	// 	}
+	// 	// page d'origine
+	// 	$post_metas['contact-from-page'] = $this->pc_post->id;
 
-		// post
-		$insert_post = wp_insert_post(
-			array(
-				'post_author'	=> 1,
-				'post_title'	=> $post_title,
-				'post_status'	=> 'publish',
-				'post_type'		=> FORM_CONTACT_POST_SLUG,
-				'meta_input'	=> $post_metas
-			)
-		);
+	// 	// post
+	// 	$insert_post = wp_insert_post(
+	// 		array(
+	// 			'post_author'	=> 1,
+	// 			'post_title'	=> $post_title,
+	// 			'post_status'	=> 'publish',
+	// 			'post_type'		=> FORM_CONTACT_POST_SLUG,
+	// 			'meta_input'	=> $post_metas
+	// 		)
+	// 	);
 
-		// si erreur
-		if ( !$insert_post ) { $this->errors['post'] = true; }
+	// 	// si erreur
+	// 	if ( !$insert_post ) { $this->errors['post'] = true; }
 
-	}
+	// }
 
 
 	/*=====  FIN Enregistrement du post  =====*/
@@ -542,9 +614,9 @@ class PC_Contact_Form {
 			if ( !$this->errors['notification'] ) {
 
 				// création du post
-				$this->insert_post();
+				// $this->insert_post();
 
-				if ( !$this->errors['post'] ) {
+				// if ( !$this->errors['post'] ) {
 
 					// validation finale
 					$this->done = true;
@@ -559,7 +631,7 @@ class PC_Contact_Form {
 							$this->fields[$name]['attr'] = array_diff( $this->fields[$name]['attr'], array('checked') );}
 					}
 					
-				}
+				// }
 
 			}
 

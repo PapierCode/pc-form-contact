@@ -143,9 +143,9 @@ class PC_Contact_Form {
 
 		/*----------  Notification  ----------*/
 		
-		global $settings_pc;
-		$to_email = ( isset( $settings_pc['form-for'] ) && '' != $settings_pc['form-for'] ) ? $settings_pc['form-for'] : 'contact@papier-code.fr';
-		$to_subject = ( isset( $settings_pc['form-subject'] ) && '' != $settings_pc['form-subject'] )? $settings_pc['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
+		global $settings_project;
+		$to_email = ( isset( $settings_project['form-for'] ) && '' != $settings_project['form-for'] ) ? $settings_project['form-for'] : 'contact@papier-code.fr';
+		$to_subject = ( isset( $settings_project['form-subject'] ) && '' != $settings_project['form-subject'] )? $settings_project['form-subject'] : 'Contact depuis '.get_bloginfo( 'name' );
 
 		$this->notification = array(
 			'to-email' 		=> $to_email,	// email du destinataire
